@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>TimeBeCreativeChat</title>
+        <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    </head>
+    
+    <body>
+        <h1>TimeBeCreativeChat</h1>
+        <ul id="messages"></ul>
+        <input id="message" autocomplete="off">
+        <button onclick="sendMessage()">Send</button>
+
+        <script>
+            var socket = io("https://flask-chat-vps.onrender.com", { transports: ['websocket'] });
+
+            socket.on('message', function(msg) {
+                var li = document.createElement("li");
+                li.appendChild(document.createTextNode(msg));
+                document.getElementById("messages").appendChild(li);
+
+            });
+
+            function sendMessage() {
+                var msg = document.getElementById("message").value;
+                socket.send(msg);
+                document.getElementById("message").value = "";
+            }
+
+        </script>
+    </body>
+</html>
+
