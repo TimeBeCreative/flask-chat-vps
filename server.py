@@ -1,23 +1,97 @@
 import eventlet
 eventlet.monkey_patch()
 
-from flask import Flask, render_template
+from flask import Flask, render_template, redirect, url_for, session
 from flask_socketio import SocketIO, send
+
+from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
+from flask_oauthlib.client import OAuth
 
 import os
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'Ukraine Magic'
+app.config['SECRET_KEY'] = 'Ukraine TimeBeCreative Magic'
 socketio = SocketIO(app, cors_allowed_origins="*")
+
+#Google OAuth
+
+oauth = OAuth(app)
+google = oauth.remote_app(
+    'google',
+    consumer_key="517190451083-g0pu07rgo5nuvdo2oh16ebcqquc3qcjp.apps.googleusercontent.com",
+    consumer_secret="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",
+    request_token_params={'scope': 'email profile'},
+    base_url='https://www.googleapis.com/oauth2/v1/',
+    request_token_url=None,
+    access_token_method='POST',
+    access_token_url='https://accounts.google.com/o/oauth2/token',
+    authorize_url='https://accounts.google.com/o/oauth2/auth'
+)
+
+#Flask-Login
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
+
+class User(UserMixin):
+    def __init__(self, user_id, name, email):
+        self.id = user_id
+        self.name = name
+        self.email = email
+        
+@login_manager.user_loader
+def load_user(user_id):
+    return users.get(user.id)
+
+users = {}
+
+
 
 @app.route('/')
 def index():
     return render_template('index.html')
 
+@app.route('/login')
+def login():
+    return google.authorize(callback=url_for('authorized', _external=True))
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    session.pop('google_token', None)
+    return redirect(url_for('index'))
+
+@app.route('/login/callback')
+def authorized():
+    response = google.authorized_response()
+    if response is None or response.get('access_token') is None:
+        return 'Authorization failed.'
+    
+    session ['google_token'] = (response['accedd_token'], '')
+    user_info = google.get('userinfo')
+    
+    user_id = user_info.data['id']
+    user_name = user_info.data['name']
+    user_email = user_info.data['email']
+    
+    if user_id not in users:
+        users[user_id] = User(user_id, user_name, user_email)
+        
+    login_user(users[user_id])
+    
+    return redirect(url_for('index'))
+
 @socketio.on('message')
+@login_required
 def handle_message(msg):
-    print(f'Message: {msg}')
-    send(msg, broadcast=True)
+    print(f'{current_user.name}: {msg}')
+    send(f'{current_user.name}: {msg}', broadcast=True)
+    
+@google.tokengetter
+def get_google_oauth_token():
+    return session.get('google_token')
+
     
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 10000))
