@@ -29,6 +29,7 @@ google = oauth.register(
         #'redirect_uri':'https://flask-chat-vps.onrender.com/login/callback'
     },
     userifo_endpoint ='https://openidconnect.googleapis.com/v1/userinfo'
+    jwks_uri='https://www.googleapis.com/oauth2/v3/certs',
   #  scope='email profile',
    # redirect_uri='https://flask-chat-vps.onrender.com/login/callback'
     #request_token_params={'scope': 'email profile'},
