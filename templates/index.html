@@ -5,6 +5,14 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>TimeBeCreativeChat</title>
         <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+        <style>
+            .username {
+                font-weight: bold;
+            }
+            .message {
+                margin-left: 10px;
+            }
+        </style>
     </head>
     
     <body>
@@ -28,7 +36,22 @@
 
             socket.on('message', function(msg) {
                 var li = document.createElement("li");
-                li.appendChild(document.createTextNode(msg));
+
+                var username = msg.split(':'[0]);
+                var message = msg.split(':').slice(1).join(':');
+
+                var nameElement = document.createElement("span");
+                nameElement.classicList.add("username");
+                nameElement.textContent = username + ": ";
+
+                var messageElement = document.createElement("span");
+                messageElement.classicList.add("message");
+                messageElement.textContent = message;
+
+
+
+                li.appendChild(nameElement);
+                li.appendChild(messageElement);
                 document.getElementById("messages").appendChild(li);
 
             });
