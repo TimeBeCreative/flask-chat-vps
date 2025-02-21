@@ -21,13 +21,14 @@ google = oauth.register(
     'google',
     client_id="517190451083-g0pu07rgo5nuvdo2oh16ebcqquc3qcjp.apps.googleusercontent.com",
     client_secret="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",
-    authorize_url='https://accounts.google.com/o/oauth2/auth',
-    access_token_url='https://accounts.google.com/o/oauth2/token',
+    authorize_url='https://accounts.google.com/o/oauth2/v2/auth',
+    access_token_url='https://oauth2.googleapis.com/token',
     refresh_token_url='https://accounts.google.com/o/oauth2/token',
     client_kwargs={
         'scope': 'openid email profile',
         #'redirect_uri':'https://flask-chat-vps.onrender.com/login/callback'
-    }
+    },
+    userifo_endpoint ='https://openidconnect.googleapis.com/v1/userinfo'
   #  scope='email profile',
    # redirect_uri='https://flask-chat-vps.onrender.com/login/callback'
     #request_token_params={'scope': 'email profile'},
