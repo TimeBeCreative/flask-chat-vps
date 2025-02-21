@@ -26,7 +26,7 @@ google = oauth.register(
     refresh_token_url='https://accounts.google.com/o/oauth2/token',
     client_kwargs={
         'scope': 'openid email profile',
-        '  redirect_uri':'https://flask-chat-vps.onrender.com/login/callback'
+        #'redirect_uri':'https://flask-chat-vps.onrender.com/login/callback'
     }
   #  scope='email profile',
    # redirect_uri='https://flask-chat-vps.onrender.com/login/callback'
@@ -64,7 +64,9 @@ def index():
 
 @app.route('/login')
 def login():
-    return google.authorize_redirect(url_for('authorized', _external=True))
+    return google.authorize_redirect(
+        url_for('authorized', _external=True, _scheme='https')
+        )
 
 @app.route('/logout')
 @login_required
