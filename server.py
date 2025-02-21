@@ -47,10 +47,11 @@ login_manager.init_app(app)
 login_manager.login_view = 'login'
 
 class User(UserMixin):
-    def __init__(self, user_id, name, email):
+    def __init__(self, user_id, name, email, avatar_url):
         self.id = user_id
         self.name = name
         self.email = email
+        self.avatar_url = avatar_url
         
 @login_manager.user_loader
 def load_user(user_id):
@@ -85,12 +86,13 @@ def authorized():
     user_info = google.get('https://openidconnect.googleapis.com/v1/userinfo').json()
     print(user_info)
     
+    user_avatar = user_info['picture']
     user_id = user_info.get('sub', 'unknow')
     user_name = user_info.get('name', 'Unknow')
     user_email = user_info.get('email', 'Unknow')
     
     if user_id not in users:
-        users[user_id] = User(user_id, user_name, user_email)
+        users[user_id] = User(user_id, user_name, user_email, user_avatar)
         
     login_user(users[user_id])
     
@@ -102,7 +104,14 @@ def get_google_oauth_token():
 @login_required
 def handle_message(msg):
     print(f'{current_user.name}: {msg}')
-    send(f'{current_user.name}: {msg}', broadcast=True)
+    
+    message_data = {
+        'username': current_user.name,
+        'avatar_url': current_user.avatar_url,
+        'message': msg
+    }
+    send(message_data, broadcast=True)
+   # send(f'{current_user.name}: {msg}', broadcast=True)
     
 
 
