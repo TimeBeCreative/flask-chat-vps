@@ -37,15 +37,15 @@
             socket.on('message', function(msg) {
                 var li = document.createElement("li");
 
-                var username = msg.split(':'[0]);
+                var username = msg.split(':')[0];
                 var message = msg.split(':').slice(1).join(':');
 
                 var nameElement = document.createElement("span");
-                nameElement.classicList.add("username");
+                nameElement.classList.add("username");
                 nameElement.textContent = username + ": ";
 
                 var messageElement = document.createElement("span");
-                messageElement.classicList.add("message");
+                messageElement.classList.add("message");
                 messageElement.textContent = message;
 
 
