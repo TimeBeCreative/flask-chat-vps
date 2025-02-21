@@ -60,7 +60,7 @@ def index():
 
 @app.route('/login')
 def login():
-    return google.authorize(callback=url_for('authorized', _external=True))
+    return google.authorize_redirect(url_for('authorized', _external=True))
 
 @app.route('/logout')
 @login_required
@@ -71,12 +71,14 @@ def logout():
 
 @app.route('/login/callback')
 def authorized():
-    response = google.authorized_response()
-    if response is None or response.get('access_token') is None:
-        return 'Authorization failed.'
+    token = google.authorize_access_token()
     
-    session ['google_token'] = (response['access_token'], '')
-    user_info = google.get('userinfo')
+  #  response = google.authorized_response()
+  #  if response is None or response.get('access_token') is None:
+ #       return 'Authorization failed.'
+    
+   # session ['google_token'] = (response['access_token'], '')
+    user_info = google.get('userinfo').json()
     
     user_id = user_info.data['id']
     user_name = user_info.data['name']
