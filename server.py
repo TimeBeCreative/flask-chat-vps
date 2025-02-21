@@ -81,12 +81,8 @@ def logout():
 def authorized():
     token = google.authorize_access_token()
     
-  #  response = google.authorized_response()
-  #  if response is None or response.get('access_token') is None:
- #       return 'Authorization failed.'
-    
-   # session ['google_token'] = (response['access_token'], '')
-    user_info = google.get('userinfo').json()
+
+    user_info = google.get('https://openidconnect.googleapis.com/v1/userinfo').json()
     
     user_id = user_info.data['id']
     user_name = user_info.data['name']
@@ -107,9 +103,7 @@ def handle_message(msg):
     print(f'{current_user.name}: {msg}')
     send(f'{current_user.name}: {msg}', broadcast=True)
     
-#@google.tokengetter
-#def get_google_oauth_token():
- #   return session.get('google_token')
+
 
     
 if __name__ == '__main__':
