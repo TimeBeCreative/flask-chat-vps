@@ -48,7 +48,7 @@ class User(UserMixin):
         
 @login_manager.user_loader
 def load_user(user_id):
-    return users.get(user.id)
+    return users.get(user_id)
 
 users = {}
 
@@ -75,7 +75,7 @@ def authorized():
     if response is None or response.get('access_token') is None:
         return 'Authorization failed.'
     
-    session ['google_token'] = (response['accedd_token'], '')
+    session ['google_token'] = (response['access_token'], '')
     user_info = google.get('userinfo')
     
     user_id = user_info.data['id']
@@ -88,6 +88,8 @@ def authorized():
     login_user(users[user_id])
     
     return redirect(url_for('index'))
+def get_google_oauth_token():
+    return session.get('google_token')
 
 @socketio.on('message')
 @login_required
@@ -95,9 +97,9 @@ def handle_message(msg):
     print(f'{current_user.name}: {msg}')
     send(f'{current_user.name}: {msg}', broadcast=True)
     
-@google.tokengetter
-def get_google_oauth_token():
-    return session.get('google_token')
+#@google.tokengetter
+#def get_google_oauth_token():
+ #   return session.get('google_token')
 
     
 if __name__ == '__main__':
