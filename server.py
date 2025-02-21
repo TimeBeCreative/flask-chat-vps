@@ -21,13 +21,18 @@ google = oauth.create_client(
     'google',
     client_id="517190451083-g0pu07rgo5nuvdo2oh16ebcqquc3qcjp.apps.googleusercontent.com",
     client_secret="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",
-  #  request_token_params={'scope': 'email profile'},
+    authorize_url='https://accounts.google.com/o/oauth2/auth',
+    access_token_url='https://accounts.google.com/o/oauth2/token',
+    refresh_token_url='https://accounts.google.com/o/oauth2/token',
+    scope='email profile',
+    redirect_uri='http://localhost:5000/login/callback'
+    #request_token_params={'scope': 'email profile'},
   #  authorize_url='https://www.googleapis.com/oauth2/v1/',
   #  request_token_url=None,
   #  access_token_method='POST',
-    authorize_url='https://accounts.google.com/o/oauth2/auth',
-    access_token_url='https://accounts.google.com/o/oauth2/token',
-    scope='email profile',
+   # authorize_url='https://accounts.google.com/o/oauth2/auth',
+  #  access_token_url='https://accounts.google.com/o/oauth2/token',
+  #  scope='email profile'
 )
 
 #Flask-Login
