@@ -5,7 +5,8 @@ from flask import Flask, render_template, redirect, url_for, session
 from flask_socketio import SocketIO, send
 
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
-from flask_oauthlib.client import OAuth
+#from flask_oauthlib.client import OAuth
+from authlib.integrations.flask_client import OAuth
 
 import os
 
