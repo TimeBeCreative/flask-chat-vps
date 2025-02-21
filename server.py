@@ -17,7 +17,7 @@ socketio = SocketIO(app, cors_allowed_origins="*")
 #Google OAuth
 
 oauth = OAuth(app)
-google = oauth.create_client(
+google = oauth.register(
     'google',
     client_id="517190451083-g0pu07rgo5nuvdo2oh16ebcqquc3qcjp.apps.googleusercontent.com",
     client_secret="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",
