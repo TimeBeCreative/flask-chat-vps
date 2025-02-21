@@ -9,9 +9,19 @@
     
     <body>
         <h1>TimeBeCreativeChat</h1>
+        {% if not current_user.is_authenticated %}
+            <a href="{{ url_for('login') }}">
+                <button>Login with Google</button>
+            </a>
+
+        {% else %}
         <ul id="messages"></ul>
         <input id="message" autocomplete="off">
         <button onclick="sendMessage()">Send</button>
+        <button onclick="logout()">logout</button>
+        {% endif %}
+
+      
 
         <script>
             var socket = io("https://flask-chat-vps.onrender.com", { transports: ['websocket'] });
@@ -27,6 +37,10 @@
                 var msg = document.getElementById("message").value;
                 socket.send(msg);
                 document.getElementById("message").value = "";
+            }
+
+            function logout() {
+                window.location.href = "/logout";
             }
 
         </script>
