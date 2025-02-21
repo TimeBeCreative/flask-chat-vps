@@ -84,9 +84,9 @@ def authorized():
 
     user_info = google.get('https://openidconnect.googleapis.com/v1/userinfo').json()
     
-    user_id = user_info.data['id']
-    user_name = user_info.data['name']
-    user_email = user_info.data['email']
+    user_id = user_info['id']
+    user_name = user_info['name']
+    user_email = user_info['email']
     
     if user_id not in users:
         users[user_id] = User(user_id, user_name, user_email)
