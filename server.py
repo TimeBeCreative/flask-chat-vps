@@ -24,8 +24,12 @@ google = oauth.register(
     authorize_url='https://accounts.google.com/o/oauth2/auth',
     access_token_url='https://accounts.google.com/o/oauth2/token',
     refresh_token_url='https://accounts.google.com/o/oauth2/token',
-    scope='email profile',
-    redirect_uri='https://flask-chat-vps.onrender.com/login/callback'
+    client_kwargs={
+        'scope': 'openid email profile',
+        '  redirect_uri':'https://flask-chat-vps.onrender.com/login/callback'
+    }
+  #  scope='email profile',
+   # redirect_uri='https://flask-chat-vps.onrender.com/login/callback'
     #request_token_params={'scope': 'email profile'},
   #  authorize_url='https://www.googleapis.com/oauth2/v1/',
   #  request_token_url=None,
