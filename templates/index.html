@@ -34,7 +34,7 @@
 
         <div id="openChatRequestModal" class="modal">
             <div class="modal-content">
-                <span class="close" onclick="closeChatRequestModal()">&times;</span>
+                <span class="close" onclick="closeOpenChatRequestModal()">&times;</span>
                 <h2>Start Chat</h2>
                 <input type="email" id="recipientEmail" placeholder="Write an email to start a chat with">
                 <button onclick="sendChatRequest()">Send Request</button>
@@ -73,7 +73,7 @@
         </style>
 
         <button onclick="fetchChatRequests()">View requests</button>
-        <div id="chatRequestModal" class="modal">
+        <div id="ChatRequestModal" class="modal">
             <div class="modal-content">
                 <span class="close" onclick="closeChatRequestModal()">&times;</span>
                 <h2>Chat requests</h2>
@@ -134,12 +134,15 @@
                         requestsList.appendChild(li);
                     });
 
-                    document.getElementById("chatRequestModal").style.display = "block";
+                    document.getElementById("ChatRequestModal").style.display = "block";
                 });
             }
 
             function closeChatRequestModal() {
-                document.getElementById("chatRequestModal").style.display = "none";
+                document.getElementById("ChatRequestModal").style.display = "none";
+            }
+            function closeOpenChatRequestModal() {
+                document.getElementById("openChatRequestModal").style.display = "none";
             }
 
             function acceptChatRequest(email) {
@@ -170,7 +173,7 @@
             }
 
             function closeChatRequestModal() {
-                document.getElementById("openChatRequestModal").style.display = "none";
+                document.getElementById("СhatRequestModal").style.display = "none";
             }
 
             function sendChatRequest() {
