@@ -173,7 +173,7 @@
             }
 
             function closeChatRequestModal() {
-                document.getElementById("СhatRequestModal").style.display = "none";
+                document.getElementById("ChatRequestModal").style.display = "none";
             }
 
             function sendChatRequest() {
@@ -193,7 +193,7 @@
             .then(response => response.json())
             .then(data => {
                 alert(data.message);
-                closeChatRequestModal();
+                closeOpenChatRequestModal();
             });
             }
 
