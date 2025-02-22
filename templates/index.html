@@ -36,7 +36,14 @@
         <div id="chatsPanel" class="chats-panel">
             <ul id="chatsList">
 
+              
+
             </ul>
+            <script>
+                function openChat(email) {
+                    window.location.href = "/chat/" + email;
+                }
+            </script>
         </div>
         <style>
             .chats-panel {
@@ -173,7 +180,6 @@
                     data.chats.forEach(chat => {
                         var li = document.createElement("li");
                         li.textContent = chat.email;
-    
                         li.onclick = function() {
                             openChat(chat.email);
                         };
@@ -184,7 +190,8 @@
             }
     
             function openChat(email) {
-                alert("Open chat with " + email);
+              //  alert("Open chat with " + email);
+              window.location.href = "/chat/" + email;
             }
     
 
@@ -242,11 +249,11 @@
                     } else {
                         throw new Error("Failed to accept request");
                     }
-                   // fetchChatRequests();
                 }).then(data => {
                     fetchChatRequests();
-                    fetchChats();
+                   
                     alert("Chat request accepted!");
+                    fetchChats();
                 }).catch(error => {
                     console.error(error);
                     alert("Error accepting chat request");
@@ -270,9 +277,9 @@
 
             }
 
-            function closeChatRequestModal() {
-                document.getElementById("ChatRequestModal").style.display = "none";
-            }
+          //  function closeChatRequestModal() {
+        //        document.getElementById("ChatRequestModal").style.display = "none";
+       //     }
 
             function sendChatRequest() {
                 var recipientEmail = document.getElementById("recipientEmail").value;

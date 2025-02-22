@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Chat with {{ recipient_name }}</title>
+        <style>
+            .message-container {
+                display: flex;
+                align-items: center;
+            }
+            .message {
+                margin-left: 10px;
+            }
+            .avatar {
+                width: 30px;
+                height: 30px;
+                border-radius: 50%;
+                margin-right: 10px;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Chat with {{ recipient_name }}</h1>
+
+        <ul id="messages"></ul>
+
+        <input id="message" autocomplete="off">
+        <button onclick="sendMessage()">Send</button>
+        <button onclick="width.location.href='/'">Back to Chats</button>
+
+        <script>
+            var socket = io("https://flask-chat-vps.onrender.com", { transports: ['websocket', 'polling'] });
+
+            socket.on('message', function(msg) {
+                var li = document.createElement("li");
+                var messageContainer = document.createElement("div");
+                messageContainer.classList.add("message-container");
+
+                var avatarElement = document.createElement("img");
+                avatarElement.classList.add("avatar");
+                avatarElement.src = avatarUrl;
+
+                var nameElement = document.createElement("span");
+                nameElement.classList.add("username");
+                nameElement.textContent = username + ": ";
+
+                var messageElement = document.createElement("span");
+                messageElement.classList.add("message");
+                messageElement.textContent = message;
+
+
+
+
+                messageContainer.appendChild(avatarElement);
+                messageContainer.appendChild(nameElement);
+                messageContainer.appendChild(messageElement);
+
+                li.appendChild(messageContainer);
+                document.getElementById("messages").appendChild(li);
+
+            });
+
+            function sendMessage() {
+                var msg = document.getElementById("message").value;
+                socket.send(msg);
+                document.getElementById("message").value = "";
+            }
+        </script>
+
+    </body>
+</html>

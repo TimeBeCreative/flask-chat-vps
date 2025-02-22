@@ -44,11 +44,18 @@ class UserChats(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True)
     chat_id = db.Column(db.Integer, db.ForeignKey('chat.id'), primary_key=True)
     
+    
+class ChatRequest(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    sender_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    recipient_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    status = db.Column(db.String(20), default="pending")
+    
+    sender = db.relationship('User', foreign_keys=[sender_id])
+    recipient = db.relationship('User', foreign_keys=[recipient_id])
 
 
-@app.before_request
-def create_tables():
-    db.create_all()
+
 #Google OAuth
 
 oauth = OAuth(app)
@@ -73,18 +80,19 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
-class User(UserMixin):
-    def __init__(self, user_id, name, email, avatar_url):
-        self.id = user_id
-        self.name = name
-        self.email = email
-        self.avatar_url = avatar_url
+#class User(UserMixin):
+ #   def __init__(self, user_id, name, email, avatar_url):
+ #       self.id = user_id
+  #      self.name = name
+  #      self.email = email
+  #      self.avatar_url = avatar_url
         
 @login_manager.user_loader
 def load_user(user_id):
-    return users.get(user_id)
+    return User.query.get(int(user_id))
+   # return users.get(user_id)
 
-users = {}
+#users = {}
 
 chat_requests = {}
 
@@ -115,15 +123,20 @@ def authorized():
     user_info = google.get('https://openidconnect.googleapis.com/v1/userinfo').json()
     print(user_info)
     
+    user_id = user_info.get('sub')
     user_avatar = user_info['picture']
-    user_id = user_info.get('sub', 'unknow')
+    
     user_name = user_info.get('name', 'Unknow')
     user_email = user_info.get('email', 'Unknow')
     
-    if user_id not in users:
-        users[user_id] = User(user_id, user_name, user_email, user_avatar)
-        
-    login_user(users[user_id])
+    user = User.query.filter_by(user_id=user_id).first()
+    
+    if not user:
+        user = User(user_id=user_id, name=user_name, email=user_email, avatar_url=user_avatar)
+        db.session.add(user)
+        db.session.commit()
+     
+    login_user(user)
     
     return redirect(url_for('index'))
 def get_google_oauth_token():
@@ -154,23 +167,31 @@ def send_chat_request():
     data = request.json
     recipient_email = data.get("recipient_email")
     
-    recipient = next((user for user in users.values() if user.email == recipient_email), None)
-    if recipient:
-        if recipient_email not in chat_requests:
-            chat_requests[recipient_email] = []
-        chat_requests[recipient_email].append(current_user.email)
-        
-        return jsonify({"message": f"Request sent to {recipient_email}"}), 200
-    else:
+    recipient = User.query.filter_by(email=recipient_email).first()
+    if not recipient:
         return jsonify({"message": "User not found"}), 404
+    
+    existing_request = ChatRequest.query.filter_by(
+        sender_id=current_user.id, recipient_id=recipient.id, status="pending"
+    ).first()
+    if existing_request:
+         return jsonify({"message": "Request already sent"}), 400 
+     
+    new_request = ChatRequest(sender_id=current_user.id, recipient_id=recipient.id)
+    db.session.add(new_request)
+    db.session.commit()
+    
+    return jsonify({"message": f"Request sent to {recipient_email}"}), 200
+    
 
 
 @app.route('/get_chat_requests', methods=['GET'])
 @login_required
 def get_chat_requests():
-    user_email = current_user.email
-    requests = chat_requests.get(user_email, [])
-    return jsonify({"requests": requests})
+  
+    requests = ChatRequest.query.filter_by(recipient_id=current_user.id, status="pending").all()
+    request_list = [{"id": r.id, "sender_email": r.sender.email, "sender_name": r.sender.name} for r in requests]
+    return jsonify({"requests": request_list})
 
 
 
@@ -181,43 +202,58 @@ def get_chat_requests():
 @login_required
 def accept_chat_request():
     data = request.json
-    sender_email = data.get("email")
+    request_id = data.get("request_id")
     
-    if not sender_email:
-        return jsonify({"message": "Email is required"}), 400
+    chat_request = ChatRequest.query.get(request_id)
+    if not chat_request or chat_request.recipient_id != current_user.id:
+        return jsonify({"message": "Invalid request"}), 400
     
-    if sender_email in chat_requests.get(current_user.email, []):
-        if current_user.email not in user_chats:
-            user_chats[current_user.email] = []
-        if sender_email not in user_chats:
-            user_chats[sender_email] = []
-            
-        user_chats[current_user.email].append(sender_email)
-        user_chats[sender_email].append(current_user.email)
-        
-        chat_requests[current_user.email].remove(sender_email)
-        
-        return jsonify({"message": "Request accepted!"}), 200
-    return jsonify({"message": "Error!"}), 400
+    chat = Chat()
+    chat.users.append(chat_request.sender)
+    chat.users.append(chat_request.recipient)
+    
+    db.session.add(chat)
+    chat_request.status = "accepted"
+    db.session.commit()
+    
+    return jsonify({"message": "Chat request accepted"}), 200
+    
 
 @app.route('/reject_chat_request', methods=['POST'])
 @login_required
 def reject_chat_request():
-    data = request.json
-    sender_email = data.get("email")
+  data = request.json
+  request_id = data.get("request_id")
     
-    if sender_email in chat_requests.get(current_user.email, []):
-        chat_requests[current_user.email].remove(sender_email)
-        return jsonify({"message": "Request rejected"}), 200
-    return jsonify({"message": "Error!"}), 400
+  chat_request = ChatRequest.query.get(request_id)
+  if not chat_request or chat_request.recipient_id != current_user.id:
+        return jsonify({"message": "Invalid request"}), 400
+    
+  chat_request.status = "rejected"
+  db.session.commit()
+    
+  return jsonify({"message": "Request rejected"}), 200
 
 @app.route('/get_chats')
+@login_required
 def get_chats():
-    if not current_user.is_authenticated:
-        return redirect(url_for('login'))
+    chats = current_user.chats
+    chat_list = []
     
-    chats = get_chats_for_user(current_user.email)
-    return jsonify({'chats': chats})
+    for chat in chats:
+        other_users = [user for user in chat.users if user.id != current_user.id]
+        
+        if len(other_users) == 1:
+            chat_name = other_users[0].name
+        else:
+            chat_name = chat.name
+            
+        chat_list.append({"chat_id": chat.id, "chat_name": chat_name})
+    
+    
+  
+    return jsonify({'chats': chat_list})
+  
 
 def get_chats_for_user(user_email):
     user = User.query.filter_by(email=user_email).first()
@@ -225,10 +261,30 @@ def get_chats_for_user(user_email):
         return []
     
     chats = user.chats
-    return [{'chat_id': chat.id, 'chat_name': chat.name} for chat in chats]
-
+    chat_list = []
+    
+    for chat in chats:
+        other_users = [u.name for u in chat.users if u.email != user_email]
+        chat_list.append({
+            'chat_id': chat.id,
+            'chat_name': other_users[0] if len(other_users) == 1 else chat.name,
+            'participants': [u.name for u in chat.users]
+        })
+    return chat_list
+  
+@app.route('/chat/<email>')
+@login_required
+def chat(email):
+    chat = Chat.query.filter(Chat.users.any(User.email == email)).first()
+    if not chat:
+        return redirect(url_for('index'))
+    
+    return render_template('chat.html', recipient_name=email)
 
     
 if __name__ == '__main__':
+    with app.app_context():
+        db.create_all()
+    
     port = int(os.environ.get("PORT", 10000))
     socketio.run(app, host='0.0.0.0', port=port, debug=True)
