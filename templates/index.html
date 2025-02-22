@@ -236,8 +236,19 @@
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email: email})
-                }).then(() => {
+                }).then(response => {
+                    if (response.ok) {
+                        retrn response.json();
+                    } else {
+                        throw new Error("Failed to accept request");
+                    }
+                   // fetchChatRequests();
+                }).then(data => {
                     fetchChatRequests();
+                    alert("Chat request accepted!");
+                }).catch(error => {
+                    console.error(error);
+                    alert("Error accepting chat request");
                 });
             }
 
