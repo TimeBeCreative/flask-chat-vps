@@ -30,6 +30,87 @@
         <h1>TimeBeCreativeChat</h1>
 
 
+
+
+        <button id="toggleChatsButton" onclick="toggleChats()">Chats</button>
+        <div id="chatsPanel" class="chats-panel">
+            <ul id="chatsList">
+
+            </ul>
+        </div>
+        <style>
+            .chats-panel {
+                display: none;
+                position: absolute;
+                top: 50px;
+                left: 0;
+                background-color: #fff;
+                border: 1px solid #888;
+                width: 200px;
+                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+                z-index: 1000;
+            }
+            #toggleChatsButton {
+                position: fixed;
+                top: 10px;
+                left: 10px;
+                background-color:rgb(255, 0, 0);
+                color: white;
+                padding: 10px;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+            #toggleChatsButton:hover {
+                background-color:rgb(255, 0, 0);
+            }
+            #chatsList {
+                list-style-type: none;
+                margin: 0;
+                padding: 10px;
+            }
+            #chatsList li {
+                padding: 5px;
+                cursor: pointer;
+            }
+            #chatsList li:hover {
+                background-color: #f0f0f0;
+            }
+        </style>
+
+        function toggleChats() {
+            var chatsPanel = document.getElementById("chatsPanel");
+            if (chatsPanel.style.display === "none" || chatsPanel.style.display === "") {
+                chatsPanel.style.display = "block";
+                fetchChats();
+            } else {
+                chatsPanel.style.display = "none";
+            }
+        }
+        function fetchChats() {
+            fetch('/get_chats')
+            .then(response => response.json())
+            .then(data => {
+                var chatsList = document.getElementById("chatsList");
+                chatsList.innerHTML = "";
+
+                data.chats.forEach(chat => {
+                    var li = document.createElement("li");
+                    li.textContent = chat.email;
+
+                    li.onclick = function() {
+                        openChat(chat.email);
+                    };
+
+                    chatsList.appendChild(li);
+                });
+            });
+        }
+
+        function openChat(email) {
+            alert("Open chat with " + email);
+        }
+
         <button onclick="openChatRequestModal()">Start Chat</button>
 
         <div id="openChatRequestModal" class="modal">

@@ -3,6 +3,7 @@ eventlet.monkey_patch()
 
 from flask import request, jsonify
 from flask import Flask, render_template, redirect, url_for, session
+from flask_sqlalchemy import SQLAlchemy
 from flask_socketio import SocketIO, send
 
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
@@ -15,6 +16,39 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'Ukraine TimeBeCreative Magic'
 socketio = SocketIO(app, cors_allowed_origins="*")
 
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL", "postgresql://timebecreativechats_user:FSXgz1BxC3gboldt8qhHCIDAyaOJgqrp@dpg-custgannoe9s7393uhf0-a.frankfurt-postgres.render.com/timebecreativechats")
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db = SQLAlchemy(app)
+
+class User(UserMixin, db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.String(255), unique=True, nullable=False)
+    name = db.Column(db.String(255), nullable=False)
+    email = db.Column(db.String(255), unique=True, nullable=False)
+    avatar_url = db.Column(db.String(255))
+    
+    chats = db.relationship('Chat', secondary='user_chats', back_populates="users")
+    def __repr__(self):
+        return f'<User {self.name}>'
+    
+class Chat(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(255), nullable=True)
+    
+    users = db.relationship('User', secondary='user_chats', back_populates = "chats")
+    def __repr__(self):
+        return f'<CHat {self.name}>'
+    
+class UserChats(db.Model):
+    __tablename__ = 'user_chats'
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True)
+    chat_id = db.Column(db.Integer, db.ForeignKey('chat.id'), primary_key=True)
+    
+
+
+@app.before_first_request
+def create_tables():
+    db.create_all()
 #Google OAuth
 
 oauth = OAuth(app)
@@ -54,7 +88,7 @@ users = {}
 
 chat_requests = {}
 
-user_chats = {}
+
 
 @app.route('/')
 def index():
@@ -177,7 +211,21 @@ def reject_chat_request():
         return jsonify({"message": "Request rejected"}), 200
     return jsonify({"message": "Error!"}), 400
 
+@app.route('/get_chats')
+def get_chats():
+    if not current_user.is_authenticated:
+        return redirect(url_for('login'))
+    
+    chats = get_chats_for_user(current_user.email)
+    return jsonify({'chats': chats})
 
+def get_chats_for_user(user_email):
+    user = User.query.filter_by(email=user_email).first()
+    if not user:
+        return []
+    
+    chats = user.chats
+    return [{'chat_id': chat.id, 'chat_name': chat.name} for chat in chats]
 
 
     
