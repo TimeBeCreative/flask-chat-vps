@@ -78,39 +78,7 @@
             }
         </style>
 
-        function toggleChats() {
-            var chatsPanel = document.getElementById("chatsPanel");
-            if (chatsPanel.style.display === "none" || chatsPanel.style.display === "") {
-                chatsPanel.style.display = "block";
-                fetchChats();
-            } else {
-                chatsPanel.style.display = "none";
-            }
-        }
-        function fetchChats() {
-            fetch('/get_chats')
-            .then(response => response.json())
-            .then(data => {
-                var chatsList = document.getElementById("chatsList");
-                chatsList.innerHTML = "";
-
-                data.chats.forEach(chat => {
-                    var li = document.createElement("li");
-                    li.textContent = chat.email;
-
-                    li.onclick = function() {
-                        openChat(chat.email);
-                    };
-
-                    chatsList.appendChild(li);
-                });
-            });
-        }
-
-        function openChat(email) {
-            alert("Open chat with " + email);
-        }
-
+       
         <button onclick="openChatRequestModal()">Start Chat</button>
 
         <div id="openChatRequestModal" class="modal">
@@ -185,6 +153,43 @@
       
 
         <script>
+
+            function toggleChats() {
+                var chatsPanel = document.getElementById("chatsPanel");
+                if (chatsPanel.style.display === "none" || chatsPanel.style.display === "") {
+                    chatsPanel.style.display = "block";
+                    fetchChats();
+                } else {
+                    chatsPanel.style.display = "none";
+                }
+            }
+            function fetchChats() {
+                fetch('/get_chats')
+                .then(response => response.json())
+                .then(data => {
+                    var chatsList = document.getElementById("chatsList");
+                    chatsList.innerHTML = "";
+    
+                    data.chats.forEach(chat => {
+                        var li = document.createElement("li");
+                        li.textContent = chat.email;
+    
+                        li.onclick = function() {
+                            openChat(chat.email);
+                        };
+    
+                        chatsList.appendChild(li);
+                    });
+                });
+            }
+    
+            function openChat(email) {
+                alert("Open chat with " + email);
+            }
+    
+
+
+
 
 
             function fetchChatRequests() {
