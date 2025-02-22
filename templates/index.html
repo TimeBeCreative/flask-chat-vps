@@ -28,6 +28,67 @@
     
     <body>
         <h1>TimeBeCreativeChat</h1>
+
+
+        <button onclick="openChatRequestModal()">Start Chat</button>
+
+        <div id="openChatRequestModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeChatRequestModal()">&times;</span>
+                <h2>Start Chat</h2>
+                <input type="email" id="recipientEmail" placeholder="Write an email to start a chat with">
+                <button onclick="sendChatRequest()">Send Request</button>
+            </div>
+        </div>
+
+        <style>
+            .modal {
+                display: none;
+                position: fixed;
+                z-index: 1;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0,0,0,0.4);
+            }
+            .modal-content {
+                background-color: #fff;
+                margin: 15% auto;
+                padding: 20px;
+                border: 1px solid #888;
+                width: 30%;
+                text-align: center;
+               
+            }
+
+            .close {
+                color: #aaa;
+                float: right;
+                font-size: 28px;
+                font-weight: bold;
+                cursor: pointer;
+            }
+
+        </style>
+
+        <button onclick="fetchChatRequests()">View requests</button>
+        <div id="chatRequestModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeChatRequestModal()">&times;</span>
+                <h2>Chat requests</h2>
+                <ul id="chatRequestsList"></ul>
+            </div>
+        </div>
+
+
+
+
+
+
+
+
+
         {% if not current_user.is_authenticated %}
             <a href="{{ url_for('login') }}">
                 <button>Login with Google</button>
@@ -43,7 +104,116 @@
       
 
         <script>
-            var socket = io("https://flask-chat-vps.onrender.com", { transports: ['websocket'] });
+
+
+            function fetchChatRequests() {
+                fetch('/get_chat_requests')
+                .then(response => response.json())
+                .then(data => {
+                    var requestsList = document.getElementById("chatRequestsList");
+                    requestsList.innerHTML = "";
+
+                    data.requests.forEach(email => {
+                        var li = document.createElement("li");
+                        li.textContent = email;
+
+                        var acceptButton = document.createElement("button");
+                        acceptButton.textContent = "Ok";
+                        acceptButton.onclick = function() {
+                            acceptChatRequest(email);
+                        };
+
+                        var rejectButton = document.createElement("button");
+                        rejectButton.textContent = "No";
+                        rejectButton.onclick = function() {
+                            rejectChatRequest(email);
+                        };
+
+                        li.appendChild(acceptButton);
+                        li.appendChild(rejectButton);
+                        requestsList.appendChild(li);
+                    });
+
+                    document.getElementById("chatRequestModal").style.display = "block";
+                });
+            }
+
+            function closeChatRequestModal() {
+                document.getElementById("chatRequestModal").style.display = "none";
+            }
+
+            function acceptChatRequest(email) {
+                fetch('/accept_chat_request', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: email})
+                }).then(() => {
+                    fetchChatRequests();
+                });
+            }
+
+            function rejectChatRequest(email) {
+                fetch('/reject_chat_request', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: email})
+                }).then(() => {
+                    fetchChatRequests();
+                });
+            }
+
+
+
+            function openChatRequestModal() {
+                document.getElementById("openChatRequestModal").style.display = "block";
+
+            }
+
+            function closeChatRequestModal() {
+                document.getElementById("openChatRequestModal").style.display = "none";
+            }
+
+            function sendChatRequest() {
+                var recipientEmail = document.getElementById("recipientEmail").value;
+                if (!recipientEmail) {
+                    alert("Write an email to start a chat with");
+                    return;
+            }
+
+            fetch('/send_chat_request', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ recipient_email: recipientEmail})
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+                closeChatRequestModal();
+            });
+            }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            var socket = io("https://flask-chat-vps.onrender.com", { transports: ['websocket', 'polling'] });
 
             socket.on('message', function(msg) {
                 var li = document.createElement("li");

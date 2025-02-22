@@ -1,6 +1,7 @@
 import eventlet
 eventlet.monkey_patch()
 
+from flask import request, jsonify
 from flask import Flask, render_template, redirect, url_for, session
 from flask_socketio import SocketIO, send
 
@@ -26,19 +27,11 @@ google = oauth.register(
     refresh_token_url='https://accounts.google.com/o/oauth2/token',
     client_kwargs={
         'scope': 'openid email profile',
-        #'redirect_uri':'https://flask-chat-vps.onrender.com/login/callback'
+      
     },
     userinfo_endpoint ='https://openidconnect.googleapis.com/v1/userinfo',
     jwks_uri='https://www.googleapis.com/oauth2/v3/certs',
-  #  scope='email profile',
-   # redirect_uri='https://flask-chat-vps.onrender.com/login/callback'
-    #request_token_params={'scope': 'email profile'},
-  #  authorize_url='https://www.googleapis.com/oauth2/v1/',
-  #  request_token_url=None,
-  #  access_token_method='POST',
-   # authorize_url='https://accounts.google.com/o/oauth2/auth',
-  #  access_token_url='https://accounts.google.com/o/oauth2/token',
-  #  scope='email profile'
+
 )
 
 #Flask-Login
@@ -59,7 +52,9 @@ def load_user(user_id):
 
 users = {}
 
+chat_requests = {}
 
+user_chats = {}
 
 @app.route('/')
 def index():
@@ -101,8 +96,11 @@ def get_google_oauth_token():
     return session.get('google_token')
 
 @socketio.on('message')
-@login_required
+#@login_required
 def handle_message(msg):
+    if not current_user.is_authenticated:
+        return
+    
     print(f'{current_user.name}: {msg}')
     
     message_data = {
@@ -111,8 +109,75 @@ def handle_message(msg):
         'message': msg
     }
     send(message_data, broadcast=True)
-   # send(f'{current_user.name}: {msg}', broadcast=True)
+ 
     
+
+
+
+@app.route('/send_chat_request', methods=['POST'])
+@login_required
+def send_chat_request():
+    data = request.json
+    recipient_email = data.get("recipient_email")
+    
+    recipient = next((user for user in users.values() if user.email == recipient_email), None)
+    if recipient:
+        if recipient_email not in chat_requests:
+            chat_requests[recipient_email] = []
+        chat_requests[recipient_email].append(current_user.email)
+        
+        return jsonify({"message": f"Request sent to {recipient_email}"}), 200
+    else:
+        return jsonify({"message": "User not found"}), 404
+
+
+@app.route('/get_chat_requests', methods=['GET'])
+@login_required
+def get_chat_requests():
+    user_email = current_user.email
+    requests = chat_requests.get(user_email, [])
+    return jsonify({"requests": requests})
+
+
+
+
+
+
+@app.route('/accept_chat_request', methods=['POST'])
+@login_required
+def accept_chat_request():
+    data = request.json
+    sender_email = data.get("email")
+    
+    if not sender_email:
+        return jsonify({"message": "Email is required"}), 400
+    
+    if sender_email in chat_requests.get(current_user.email, []):
+        if current_user.email not in user_chats:
+            user_chats[current_user.email] = []
+        if sender_email not in user_chats:
+            user_chats[sender_email] = []
+            
+        user_chats[current_user.email].append(sender_email)
+        user_chats[sender_email].append(current_user.email)
+        
+        chat_requests[current_user.email].remove(sender_email)
+        
+        return jsonify({"message": "Request accepted!"}), 200
+    return jsonify({"message": "Error!"}), 400
+
+@app.route('/reject_chat_request', methods=['POST'])
+@login_required
+def reject_chat_request():
+    data = request.json
+    sender_email = data.get("email")
+    
+    if sender_email in chat_requests.get(current_user.email, []):
+        chat_requests[current_user.email].remove(sender_email)
+        return jsonify({"message": "Request rejected"}), 200
+    return jsonify({"message": "Error!"}), 400
+
+
 
 
     
