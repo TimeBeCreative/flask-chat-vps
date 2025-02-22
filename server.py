@@ -46,7 +46,7 @@ class UserChats(db.Model):
     
 
 
-@app.before_first_request
+@app.before_request
 def create_tables():
     db.create_all()
 #Google OAuth
