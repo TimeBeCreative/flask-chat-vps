@@ -27,7 +27,7 @@
 
         <input id="message" autocomplete="off">
         <button onclick="sendMessage()">Send</button>
-        <button onclick="width.location.href='/'">Back to Chats</button>
+        <button onclick="window.location.href='/'">Back to Chats</button>
 
         <script>
             var socket = io("https://flask-chat-vps.onrender.com", { transports: ['websocket', 'polling'] });
@@ -39,15 +39,15 @@
 
                 var avatarElement = document.createElement("img");
                 avatarElement.classList.add("avatar");
-                avatarElement.src = avatarUrl;
+                avatarElement.src = msg.avatarUrl;
 
                 var nameElement = document.createElement("span");
                 nameElement.classList.add("username");
-                nameElement.textContent = username + ": ";
+                nameElement.textContent = msg.username + ": ";
 
                 var messageElement = document.createElement("span");
                 messageElement.classList.add("message");
-                messageElement.textContent = message;
+                messageElement.textContent = msg.message;
 
 
 
