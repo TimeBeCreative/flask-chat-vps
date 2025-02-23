@@ -215,13 +215,13 @@
                         var acceptButton = document.createElement("button");
                         acceptButton.textContent = "Ok";
                         acceptButton.onclick = function() {
-                            acceptChatRequest(request.email);
+                            acceptChatRequest(request.sender_email);
                         };
 
                         var rejectButton = document.createElement("button");
                         rejectButton.textContent = "No";
                         rejectButton.onclick = function() {
-                            rejectChatRequest(request.email);
+                            rejectChatRequest(request.sender_email);
                         };
 
                         li.appendChild(acceptButton);
