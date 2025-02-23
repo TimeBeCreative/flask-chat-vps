@@ -210,7 +210,7 @@
                         console.log(request);
                         var useremail = request.email;
                         var li = document.createElement("li");
-                        li.textContent = `Request from: ${useremail}`;
+                        li.textContent = `Request from: ${request.sender_name} (${request.sender_email})`;
 
                         var acceptButton = document.createElement("button");
                         acceptButton.textContent = "Ok";
