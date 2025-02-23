@@ -272,14 +272,16 @@ def get_chats_for_user(user_email):
         })
     return chat_list
   
-@app.route('/chat/<email>')
+@app.route('/chat/<int:chat_id>')
 @login_required
-def chat(email):
-    chat = Chat.query.filter(Chat.users.any(User.email == email)).first()
-    if not chat:
+def chat(chat_id):
+    chat = Chat.query.get(chat_id)
+    if not chat or current_user not in chat.users:
         return redirect(url_for('index'))
     
-    return render_template('chat.html', recipient_name=email)
+    other_users = [user for user in chat.users if user.id != current_user.id]
+    recipient_name = other_users[0].name if len(other_users) == 1 else "Group chat"
+    return render_template('chat.html', chat_id=chat_id, recipient_name=recipient_name)
 
     
 if __name__ == '__main__':
