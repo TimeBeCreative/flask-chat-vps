@@ -41,15 +41,15 @@
 
                 var avatarElement = document.createElement("img");
                 avatarElement.classList.add("avatar");
-                avatarElement.src = msg.avatarUrl;
+                avatarElement.src = avatarUrl;
 
                 var nameElement = document.createElement("span");
                 nameElement.classList.add("username");
-                nameElement.textContent = msg.username + ": ";
+                nameElement.textContent = username + ": ";
 
                 var messageElement = document.createElement("span");
                 messageElement.classList.add("message");
-                messageElement.textContent = msg.message;
+                messageElement.textContent = message;
 
 
 
