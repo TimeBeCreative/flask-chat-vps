@@ -4,7 +4,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Chat with {{ recipient_name }}</title>
-        <script scr="https://cdn.socket.io/4.0.1/socket.io.min.js"></script>
+        <script src="https://cdn.socket.io/4.0.1/socket.io.min.js"></script>
 
         <style>
             .message-container {
@@ -65,7 +65,7 @@
 
             function sendMessage() {
                 var msg = document.getElementById("message").value;
-                if (msg.trin() === "") return;
+                if (msg.trim() === "") return;
 
                 socket.emit('message', msg);
                 document.getElementById("message").value = "";

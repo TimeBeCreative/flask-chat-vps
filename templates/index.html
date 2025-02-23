@@ -365,7 +365,7 @@
 
             function sendMessage() {
                 var msg = document.getElementById("message").value;
-                if (msg.trin() === "") return;
+                if (msg.trim() === "") return;
                 socket.send(msg);
                 document.getElementById("message").value = "";
             }
