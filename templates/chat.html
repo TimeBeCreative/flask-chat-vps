@@ -36,12 +36,19 @@
 
             socket.on('message', function(msg) {
                 var li = document.createElement("li");
+
+                var avatarUrl = msg.avatar_url;
+                var username = msg.username;
+                var message = msg.message;
+
                 var messageContainer = document.createElement("div");
                 messageContainer.classList.add("message-container");
 
                 var avatarElement = document.createElement("img");
                 avatarElement.classList.add("avatar");
                 avatarElement.src = avatarUrl;
+               // var username = msg.split(':')[0];
+             //   var message = msg.split(':').slice(1).join(':');
 
                 var nameElement = document.createElement("span");
                 nameElement.classList.add("username");
@@ -58,6 +65,7 @@
                 messageContainer.appendChild(nameElement);
                 messageContainer.appendChild(messageElement);
 
+               // li.appendChild(nameElement);
                 li.appendChild(messageContainer);
                 document.getElementById("messages").appendChild(li);
 
