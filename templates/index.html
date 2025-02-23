@@ -240,11 +240,11 @@
                 document.getElementById("openChatRequestModal").style.display = "none";
             }
 
-            function acceptChatRequest(email) {
+            function acceptChatRequest(request_id) {
                 fetch('/accept_chat_request', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email: email})
+                    body: JSON.stringify({ request_id: request_id})
                 }).then(response => {
                     if (response.ok) {
                         return response.json();
@@ -262,11 +262,11 @@
                 });
             }
 
-            function rejectChatRequest(email) {
+            function rejectChatRequest(request_id) {
                 fetch('/reject_chat_request', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email: email})
+                    body: JSON.stringify({ request_id: request_id})
                 }).then(() => {
                     fetchChatRequests();
                 });
