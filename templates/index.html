@@ -206,20 +206,21 @@
                     var requestsList = document.getElementById("chatRequestsList");
                     requestsList.innerHTML = "";
 
-                    data.requests.forEach(email => {
+                    data.requests.forEach(request => {
+                        var useremail = request.email;
                         var li = document.createElement("li");
-                        li.textContent = email;
+                        li.textContent = 'Request from: ${useremail}';
 
                         var acceptButton = document.createElement("button");
                         acceptButton.textContent = "Ok";
                         acceptButton.onclick = function() {
-                            acceptChatRequest(email);
+                            acceptChatRequest(request.email);
                         };
 
                         var rejectButton = document.createElement("button");
                         rejectButton.textContent = "No";
                         rejectButton.onclick = function() {
-                            rejectChatRequest(email);
+                            rejectChatRequest(request.email);
                         };
 
                         li.appendChild(acceptButton);
