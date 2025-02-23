@@ -180,9 +180,9 @@
     
                     data.chats.forEach(chat => {
                         var li = document.createElement("li");
-                        li.textContent = chat.email;
+                        li.textContent = chat.chat_name;
                         li.onclick = function() {
-                            openChat(chat.email);
+                            openChat(chat.chat_id);
                         };
     
                         chatsList.appendChild(li);
@@ -190,9 +190,9 @@
                 });
             }
     
-            function openChat(email) {
+            function openChat(chat_id) {
               //  alert("Open chat with " + email);
-              window.location.href = "/chat/" + email;
+              window.location.href = "/chat/" + chat_id;
             }
     
 
