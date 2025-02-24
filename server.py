@@ -7,6 +7,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_socketio import SocketIO, send
 from flask_socketio import SocketIO, emit
 from collections import defaultdict
+from flask_cors import CORS
 
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 #from flask_oauthlib.client import OAuth
@@ -23,6 +24,8 @@ online_users = {}
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL", "postgresql://timebecreativechats_user:FSXgz1BxC3gboldt8qhHCIDAyaOJgqrp@dpg-custgannoe9s7393uhf0-a.frankfurt-postgres.render.com/timebecreativechats")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
+
+CORS(app, origins="*")
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
