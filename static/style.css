@@ -1,0 +1,17 @@
+.login-btn {
+    width: 414;
+    height: 92;
+    background-image: url('static/images/login-button.png');
+    background-size: cover;
+    background-position: center;
+    border: none;
+    cursor: pointer;
+    display: block;
+    text-indent: -9999px;
+    border-radius: 50px;
+    transition: 0.3s;
+}
+
+.login-btn:hover {
+    transform: scale(1.05);
+}
