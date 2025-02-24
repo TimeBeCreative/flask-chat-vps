@@ -19,7 +19,7 @@ app = Flask(__name__, static_url_path='/static')
 app.config['SECRET_KEY'] = 'Ukraine TimeBeCreative Magic'
 socketio = SocketIO(app, cors_allowed_origins="*")
 
-online_users = {}
+
 
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL", "postgresql://timebecreativechats_user:FSXgz1BxC3gboldt8qhHCIDAyaOJgqrp@dpg-custgannoe9s7393uhf0-a.frankfurt-postgres.render.com/timebecreativechats")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -81,6 +81,8 @@ google = oauth.register(
     jwks_uri='https://www.googleapis.com/oauth2/v3/certs',
 
 )
+
+online_users = {}
 
 #Flask-Login
 login_manager = LoginManager()
