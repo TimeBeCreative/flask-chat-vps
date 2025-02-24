@@ -1,8 +1,23 @@
+.welcome-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    text-align: center;
+}
+
+.logo {
+    width: 150px;
+    margin-bottom: 20px;
+}
+
 .login-btn {
     width: 414px;
     height: 92px;
     background-image: url('/static/images/Login.png');
-    background-size: cover;
+    background-size: contain;
+    background-repeat: no-repeat;
     background-position: center;
     border: none;
     cursor: pointer;
