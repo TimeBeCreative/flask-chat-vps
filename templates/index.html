@@ -180,11 +180,17 @@
 
         <script>
 
-        //    const currentUserId = "123";
-       //     const currentUserEmail = "user@example.com";
-      //      const currentUserAvatar = "https://example.com/avatar.jpg";
+            const currentUserId = "123";
+            const currentUserEmail = "user@example.com";
+            const currentUserAvatar = "https://example.com/avatar.jpg";
 
-            const socket = io.connect('https://flask-chat-vps.onrender.com'); 
+            const socket = io.connect('https://flask-chat-vps.onrender.com', {
+                auth: {
+                    user_id: currentUserId,
+                    email: currentUserEmail,
+                    avatar: currentUserAvatar
+                }
+            });
                
 
             socket.on('update_online_users', (users) => {
