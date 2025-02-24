@@ -25,7 +25,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL", "postgres
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
-CORS(app, origins="*")
+CORS(app, origins=["*"], allow_headers=["Content-Type", "Authorization", "Acces-Control-Allow-Origin"])
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
