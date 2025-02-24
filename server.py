@@ -12,7 +12,7 @@ from authlib.integrations.flask_client import OAuth
 
 import os
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='/static')
 app.config['SECRET_KEY'] = 'Ukraine TimeBeCreative Magic'
 socketio = SocketIO(app, cors_allowed_origins="*")
 

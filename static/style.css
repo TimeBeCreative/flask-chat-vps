@@ -1,7 +1,7 @@
 .login-btn {
     width: 414;
     height: 92;
-    background-image: url('static/images/Login.png');
+    background-image: url('/static/images/Login.png');
     background-size: cover;
     background-position: center;
     border: none;
