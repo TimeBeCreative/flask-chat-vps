@@ -101,7 +101,7 @@ def handle_connect():
       online_users[user_id] = {"email": email, "avatar": avatar, "session_id": request.sid}
       emit('update_online_users', list(online_users.values()), broadcast=True)
       
-@socketio.on('disconect')
+@socketio.on('disconnect')
 def handle_disconnect():
     user_id = None
     for uid, data in list(online_users.items()):
