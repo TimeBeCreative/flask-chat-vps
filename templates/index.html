@@ -196,10 +196,12 @@
                
 
             socket.on('update_online_users', (users) => {
+                print(f"update_online_users");
                 updateOnlineUsersList(users);
             });
 
             function updateOnlineUsersList(users) {
+                print(f"updateOnlineUsersList");
                 const userList = document.getElementById('online-users-list');
                 userList.innerHTML = "";
 
