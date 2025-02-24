@@ -185,7 +185,7 @@
             const currentUserAvatar = "https://example.com/avatar.jpg";
 
             const socket = io.connect('https://flask-chat-vps.onrender.com', {
-                auth: {
+                query: {
                     user_id: currentUserId,
                     email: currentUserEmail,
                     avatar: currentUserAvatar
@@ -198,7 +198,7 @@
             });
 
             function updateOnlineUsersList(users) {
-                const userList = document.getElementById("online-users-list");
+                const userList = document.getElementById('online-users-list');
                 userList.innerHTML = "";
 
                 users.forEach(user => {
