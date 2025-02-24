@@ -35,3 +35,24 @@
 .login-btn:hover {
     transform: scale(1.05);
 }
+
+#online-users {
+    width: 250px;
+    background: #ff0000;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.user-item {
+    display: flex;
+    align-items: center;
+    padding: 5px;
+    border-bottom: 1px solid #ddd;
+}
+
+.user-item img.avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-right: 10px;
+}

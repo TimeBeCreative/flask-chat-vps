@@ -142,7 +142,7 @@
                 }
             </script>
         </div>
-        
+
         <button onclick="openChatRequestModal()">Start Chat</button>
 
         <div id="openChatRequestModal" class="modal">
@@ -169,11 +169,51 @@
         <input id="message" autocomplete="off">
         <button onclick="sendMessage()">Send</button>
         <button onclick="logout()">logout</button>
+
+        <div id="online-users">
+            <h3>Users Online</h3>
+            <div id="online-users-list"></div>
+        </div>
         {% endif %}
 
       
 
         <script>
+
+            const currentUserId = "123";
+            const currentUserEmail = "user@example.com";
+            const currentUserAvatar = "https://example.com/avatar.jpg";
+
+            const socket = io.connect('https://flask-chat-vps.onrender.com', {
+                query: {
+                    user_id: currentUserId,
+                    email: currentUserEmail,
+                    avatar: currentUserAvatar
+                }
+            });
+
+            socket.on('update_online_users', (users) => {
+                updateOnlineUsersList(users);
+            });
+
+            function updateOnlineUsersList(users) {
+                const userList = document.getElementById("online-users-list");
+                userList.innerHTML = "";
+
+                users.forEach(user => {
+                    const userItem = document.createElement("div");
+                    userItem.classList.add("user-item");
+                    userItem.innerHTML = `
+                        <img src="${user.avatar}" class="avatar">
+                        <span>${user.email}</span>
+                    `;
+                    userList.appendChild(userItem);
+                });
+            }
+
+
+
+
 
             function toggleChats() {
                 var chatsPanel = document.getElementById("chatsPanel");

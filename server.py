@@ -5,6 +5,8 @@ from flask import request, jsonify
 from flask import Flask, render_template, redirect, url_for, session
 from flask_sqlalchemy import SQLAlchemy
 from flask_socketio import SocketIO, send
+from flask_socketio import SocketIO, emit
+from collections import defaultdict
 
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 #from flask_oauthlib.client import OAuth
@@ -15,6 +17,8 @@ import os
 app = Flask(__name__, static_url_path='/static')
 app.config['SECRET_KEY'] = 'Ukraine TimeBeCreative Magic'
 socketio = SocketIO(app, cors_allowed_origins="*")
+
+online_users = {}
 
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL", "postgresql://timebecreativechats_user:FSXgz1BxC3gboldt8qhHCIDAyaOJgqrp@dpg-custgannoe9s7393uhf0-a.frankfurt-postgres.render.com/timebecreativechats")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -86,6 +90,32 @@ login_manager.login_view = 'login'
   #      self.name = name
   #      self.email = email
   #      self.avatar_url = avatar_url
+        
+@socketio.on('connect')
+def handle_connect():
+  user_id = request.args.get('user_id')
+  email = request.args.get('email')
+  avatar = request.args.get('avatar')
+  
+  if user_id and email:
+      online_users[user_id] = {"email": email, "avatar": avatar, "session_id": request.sid}
+      emit('update_online_users', list(online_users.values()), broadcast=True)
+      
+@socketio.on('disconect')
+def handle_disconnect():
+    user_id = None
+    for uid, data in list(online_users.items()):
+        if data["session_id"] == request.sid:
+            user_id = uid
+            del online_users[uid]
+            break
+        
+    if user_id:
+        emit('update_online_users', list(online_users.values()), broadcast=True)
+            
+            
+        
+        
         
 @login_manager.user_loader
 def load_user(user_id):
