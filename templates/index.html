@@ -397,7 +397,7 @@
 
 
 
-          //  var socket = io("https://flask-chat-vps.onrender.com", { transports: ['websocket', 'polling'] });
+            var socket = io("https://flask-chat-vps.onrender.com", { transports: ['websocket', 'polling'] });
 
             socket.on('message', function(msg) {
                 var li = document.createElement("li");
