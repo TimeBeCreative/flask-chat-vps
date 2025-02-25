@@ -184,9 +184,9 @@
             const currentUserEmail = "user@example.com";
             const currentUserAvatar = "https://example.com/avatar.jpg";
 
-            const socket = io.connect('https://flask-chat-vps.onrender.com', {
-             //   transports: ["polling"],
-             //   withCredentials: true,
+            const socket = io.connect('{{ socket_url }}', {
+                transports: ["polling"],
+                withCredentials: true,
                 auth: {
                     user_id: currentUserId,
                     email: currentUserEmail,
@@ -194,6 +194,9 @@
                 }
             });
                
+            socket.on('connect', () => {
+                console.log("Connected to server");
+            });
 
             socket.on('update_online_users', (users) => {
                 console.log("update_online_users", users);
@@ -206,7 +209,7 @@
                 userList.innerHTML = "";
 
                 users.forEach(user => {
-                    const  avatarUrl = user.avatar
+                   // const  avatarUrl = user.avatar
                     const userItem = document.createElement("div");
                     userItem.classList.add("user-item");
                     userItem.innerHTML = `
@@ -222,7 +225,7 @@
 
 
             function toggleChats() {
-                var chatsPanel = document.getElementById("chatsPanel");
+                const chatsPanel = document.getElementById("chatsPanel");
                 if (chatsPanel.style.display === "none" || chatsPanel.style.display === "") {
                     chatsPanel.style.display = "block";
                     fetchChats();
@@ -235,11 +238,11 @@
                 .then(response => response.json())
                 .then(data => {
                     console.log(data);
-                    var chatsList = document.getElementById("chatsList");
+                    const chatsList = document.getElementById("chatsList");
                     chatsList.innerHTML = "";
     
                     data.chats.forEach(chat => {
-                        var li = document.createElement("li");
+                        const li = document.createElement("li");
                         li.textContent = chat.chat_name;
                         li.onclick = function() {
                             openChat(chat.chat_id);
@@ -264,7 +267,7 @@
                 fetch('/get_chat_requests')
                 .then(response => response.json())
                 .then(data => {
-                    var requestsList = document.getElementById("chatRequestsList");
+                    const requestsList = document.getElementById("chatRequestsList");
                     requestsList.innerHTML = "";
 
                     data.requests.forEach(request => {
@@ -345,7 +348,7 @@
        //     }
 
             function sendChatRequest() {
-                var recipientEmail = document.getElementById("recipientEmail").value;
+                const recipientEmail = document.getElementById("recipientEmail").value;
                 if (!recipientEmail) {
                     alert("Write an email to start a chat with");
                     return;
@@ -389,9 +392,9 @@
             socket.on('message', function(msg) {
                 var li = document.createElement("li");
 
-                var avatarUrl = msg.avatar_url;
-                var username = msg.username;
-                var message = msg.message;
+                const avatarUrl = msg.avatar_url;
+                const username = msg.username;
+                const message = msg.message;
 
                 var messageContainer = document.createElement("div");
                 messageContainer.classList.add("message-container");
