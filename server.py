@@ -97,11 +97,7 @@ login_manager.login_view = 'login'
   #      self.avatar_url = avatar_url
         
 @socketio.on('connect')
-@login_required
 def handle_connect():
-   # if not current_user.is_authenticated:
-      #  return
-    
     print(f"New connection: {request.sid}")
     user_id = request.args.get('user_id')
     email = request.args.get('email')
@@ -113,8 +109,9 @@ def handle_connect():
         online_users[user_id] = {"email": email, "avatar": avatar, "session_id": request.sid}
         print(f"Online users: {online_users}")
         emit('update_online_users', list(online_users.values()), broadcast=True)
-        emit('update_online_users', list(online_users.values()), broadcast=True)
-      
+    else:
+        print("Missing user_id or email")
+
 @socketio.on('disconnect')
 def handle_disconnect():
     user_id = None
@@ -128,7 +125,7 @@ def handle_disconnect():
         print(f"User {user_id} disconnected")
         emit('update_online_users', list(online_users.values()), broadcast=True)
     else:
-        print("Unknown user disconnected")
+        print("User not found in online_users")
             
             
         
