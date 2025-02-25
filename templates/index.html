@@ -180,17 +180,31 @@
 
         <script>
 
-            const currentUserId = "{{ user.user_id }}";
-            const currentUserEmail = "{{ user.email }}";
-            const currentUserAvatar = "{{ user.avatar_url }}";
+     //       const currentUserId = "{{ user.user_id }}";
+     //       const currentUserEmail = "{{ user.email }}";
+    //        const currentUserAvatar = "{{ user.avatar_url }}";
 
+         //   socket.on('message', function(msg) {
+          //      var li = document.createElement("li");
+//
+         //       const avatarUrl = msg.avatar_url;
+         //       const username = msg.username;
+        //        const message = msg.message;
+
+
+            let userData = {
+                user_id: '',
+                email: '',
+                avatar: ''
+            };
             const socket = io.connect('https://flask-chat-vps.onrender.com', {
                 transports: ["websocket", "polling"],
-             //   withCredentials: true,
-                query: {
-                    user_id: currentUserId,
-                    email: currentUserEmail,
-                    avatar: currentUserAvatar
+            
+                query:  {
+                        user_id: userData.user_id,
+                        email: userData.email,
+                        avatar: userData.avatar,
+                    
                 }
             });
                
