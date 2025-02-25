@@ -185,8 +185,8 @@
             const currentUserAvatar = "https://example.com/avatar.jpg";
 
             const socket = io.connect('https://flask-chat-vps.onrender.com', {
-                transports: ["polling"],
-                withCredentials: true,
+             //   transports: ["polling"],
+             //   withCredentials: true,
                 auth: {
                     user_id: currentUserId,
                     email: currentUserEmail,
@@ -196,12 +196,12 @@
                
 
             socket.on('update_online_users', (users) => {
-                console.log("update_online_users");
+                console.log("update_online_users", users);
                 updateOnlineUsersList(users);
             });
 
             function updateOnlineUsersList(users) {
-                console.log("updateOnlineUsersList");
+                console.log("updateOnlineUsersList", users);
                 const userList = document.getElementById('online-users-list');
                 userList.innerHTML = "";
 
