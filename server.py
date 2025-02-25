@@ -173,6 +173,10 @@ def authorized():
     user_name = user_info.get('name', 'Unknow')
     user_email = user_info.get('email', 'Unknow')
     
+    session['user_id'] = user_id
+    session['email'] = user_email
+    session['avatar'] = user_avatar
+    
     user = User.query.filter_by(user_id=user_id).first()
     
     if not user:
@@ -180,9 +184,7 @@ def authorized():
         db.session.add(user)
         db.session.commit()
         
-    session['user_id'] = user_id
-    session['email'] = user_email
-    session['avatar'] = user_avatar
+  
      
     login_user(user)
     
