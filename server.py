@@ -96,36 +96,36 @@ login_manager.login_view = 'login'
   #      self.email = email
   #      self.avatar_url = avatar_url
         
-@socketio.on('connect')
-def handle_connect():
+#@socketio.on('connect')
+#def handle_connect():
     #print(f"New connection: {request.sid}")
-    user_id = session.get('user_id')
-    email = session.get('email')
-    avatar = session.get('avatar')
+  #  user_id = session.get('user_id')
+  #  email = session.get('email')
+ #   avatar = session.get('avatar')
   
-    print(f"Received user_id: {user_id}, email: {email}, avatar: {avatar}")
+  #  print(f"Received user_id: {user_id}, email: {email}, avatar: {avatar}")
   
-    if user_id:
-        online_users[user_id] = {"email": email, "avatar": avatar, "session_id": request.sid}
-        print(f"Online users: {online_users}")
-        emit('update_online_users', list(online_users.values()), broadcast=True)
-    else:
-        print("Missing user_id or email")
+   # if user_id:
+  #      online_users[user_id] = {"email": email, "avatar": avatar, "session_id": request.sid}
+  #      print(f"Online users: {online_users}")
+  #      emit('update_online_users', list(online_users.values()), broadcast=True)
+  #  else:
+  #      print("Missing user_id or email")
 
-@socketio.on('disconnect')
-def handle_disconnect():
-    user_id = None
-    for uid, data in list(online_users.items()):
-        if data["session_id"] == request.sid:
-            user_id = uid
-            del online_users[uid]
-            break
+#@socketio.on('disconnect')
+#def handle_disconnect():
+  #  user_id = None
+  #  for uid, data in list(online_users.items()):
+   #     if data["session_id"] == request.sid:
+   #         user_id = uid
+   #         del online_users[uid]
+   #         break
         
-    if user_id:
-        print(f"User {user_id} disconnected")
-        emit('update_online_users', list(online_users.values()), broadcast=True)
-    else:
-        print("User not found in online_users")
+   # if user_id:
+    #    print(f"User {user_id} disconnected")
+    #    emit('update_online_users', list(online_users.values()), broadcast=True)
+   # else:
+   #     print("User not found in online_users")
             
             
         

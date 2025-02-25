@@ -170,10 +170,10 @@
         <button onclick="sendMessage()">Send</button>
         <button onclick="logout()">logout</button>
 
-        <div id="online-users">
-            <h3>Users Online</h3>
-            <div id="online-users-list"></div>
-        </div>
+      {% comment %} //\\  <div id="online-users">
+    //        <h3>Users Online</h3>
+    //        <div id="online-users-list"></div>
+    //    </div> {% endcomment %}
         {% endif %}
 
       
@@ -192,48 +192,48 @@
         //        const message = msg.message;
 
 
-            let userData = {
-                user_id: '{{  session["user_id"] }}',
-                email: '{{  session["email"] }}',
-                avatar: '{{  session["avatar"] }}'
-            };
-            const socket = io.connect('https://flask-chat-vps.onrender.com', {
-                transports: ["websocket", "polling"],
-            
-                query:  {
-                   user_id: userData.user_id,
-                   email: userData.email,
-                   avatar: userData.avatar,
+       //     let userData = {
+       //         user_id: '{{  session["user_id"] }}',
+        //        email: '{{  session["email"] }}',
+       //         avatar: '{{  session["avatar"] }}'
+       //     };
+       //     const socket = io.connect('https://flask-chat-vps.onrender.com', {
+       //         transports: ["websocket", "polling"],
+       ////     
+        //        query:  {
+        //           user_id: userData.user_id,
+        //           email: userData.email,
+       //            avatar: userData.avatar,
                     
-                }
-            });
-               
-            socket.on('connect', () => {
-                console.log("Connected to server");
+      //          }
+          //  });
+      //         
+         //   socket.on('connect', () => {
+         //       console.log("Connected to server");
                 
-            });
+        //    });
 
-            socket.on('update_online_users', (users) => {
-                console.log("update_online_users", users);
-                updateOnlineUsersList(users);
-            });
+      //      socket.on('update_online_users', (users) => {
+       //         console.log("update_online_users", users);
+       //         updateOnlineUsersList(users);
+       //     });
 
-            function updateOnlineUsersList(users) {
-                console.log("updateOnlineUsersList", users);
-                const userList = document.getElementById('online-users-list');
-                userList.innerHTML = "";
-
-                users.forEach(user => {
-                    const  avatarUrl = user.avatar
-                    const userItem = document.createElement("div");
-                    userItem.classList.add("user-item");
-                    userItem.innerHTML = `
-                    <img src="${avatarUrl}" class="avatar">
-                    <span>${user.email}</span>
-                `;
-                userList.appendChild(userItem);
-                });
-            }
+      //      function updateOnlineUsersList(users) {
+      //          console.log("updateOnlineUsersList", users);
+      //          const userList = document.getElementById('online-users-list');
+      //          userList.innerHTML = "";
+//
+              //  users.forEach(user => {
+             //       const  avatarUrl = user.avatar
+            //        const userItem = document.createElement("div");
+           //         userItem.classList.add("user-item");
+          //          userItem.innerHTML = `
+         //           <img src="${avatarUrl}" class="avatar">
+             //       <span>${user.email}</span>
+            //    `;
+            //    userList.appendChild(userItem);
+           //     });
+         //   }
 
 
 
