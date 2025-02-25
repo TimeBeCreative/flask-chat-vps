@@ -144,7 +144,11 @@ chat_requests = {}
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    user_email = session.get("emai;")
+    user = None
+    if user_email:
+        user = User.query.filter_by(email=user_email).first()
+    return render_template('index.html', user=user)
 
 @app.route('/login')
 def login():
