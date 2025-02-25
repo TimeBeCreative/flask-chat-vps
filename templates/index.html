@@ -196,6 +196,7 @@
                
             socket.on('connect', () => {
                 console.log("Connected to server");
+                
             });
 
             socket.on('update_online_users', (users) => {
@@ -209,14 +210,14 @@
                 userList.innerHTML = "";
 
                 users.forEach(user => {
-                   // const  avatarUrl = user.avatar
+                    const  avatarUrl = user.avatar
                     const userItem = document.createElement("div");
                     userItem.classList.add("user-item");
                     userItem.innerHTML = `
-                        <img src="${user.avatar}" class="avatar">
-                        <span>${user.email}</span>
-                    `;
-                    userList.appendChild(userItem);
+                    <img src="${avatarUrl}" class="avatar">
+                    <span>${user.email}</span>
+                `;
+                userList.appendChild(userItem);
                 });
             }
 

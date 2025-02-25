@@ -99,8 +99,8 @@ login_manager.login_view = 'login'
 @socketio.on('connect')
 @login_required
 def handle_connect():
-    if not current_user.is_authenticated:
-        return
+   # if not current_user.is_authenticated:
+      #  return
     
     print(f"New connection: {request.sid}")
     user_id = request.args.get('user_id')
