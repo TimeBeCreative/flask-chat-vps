@@ -180,9 +180,9 @@
 
         <script>
 
-            const currentUserId = "123";
-            const currentUserEmail = "user@example.com";
-            const currentUserAvatar = "https://example.com/avatar.jpg";
+            const currentUserId = "{{ user.user_id }}";
+            const currentUserEmail = "{{ user.email }}";
+            const currentUserAvatar = "{{ user.avatar_url }}";
 
             const socket = io.connect('https://flask-chat-vps.onrender.com', {
                 transports: ["websocket", "polling"],
