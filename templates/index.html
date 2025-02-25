@@ -192,20 +192,20 @@
         //        const message = msg.message;
 
 
-            let userData = {
-                user_id: '',
-                email: '',
-                avatar: ''
-            };
+         //   let userData = {
+        //        user_id: '',
+     // //          email: '',
+    //            avatar: ''
+    //        };
             const socket = io.connect('https://flask-chat-vps.onrender.com', {
                 transports: ["websocket", "polling"],
             
-                query:  {
-                        user_id: userData.user_id,
-                        email: userData.email,
-                        avatar: userData.avatar,
-                    
-                }
+            //    query:  {
+           //             user_id: userData.user_id,
+        //                email: userData.email,
+        //                avatar: userData.avatar,
+       //             
+              //  }
             });
                
             socket.on('connect', () => {

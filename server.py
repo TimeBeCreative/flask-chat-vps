@@ -99,9 +99,9 @@ login_manager.login_view = 'login'
 @socketio.on('connect')
 def handle_connect():
     #print(f"New connection: {request.sid}")
-    user_id = request.args.get('user_id')
-    email = request.args.get('email')
-    avatar = request.args.get('avatar')
+    user_id = session.get('user_id')
+    email = session.get('email')
+    avatar = session.get('avatar')
   
     print(f"Received user_id: {user_id}, email: {email}, avatar: {avatar}")
   
@@ -179,6 +179,10 @@ def authorized():
         user = User(user_id=user_id, name=user_name, email=user_email, avatar_url=user_avatar)
         db.session.add(user)
         db.session.commit()
+        
+    session['user_id'] = user_id
+    session['email'] = user_email
+    session['avatar'] = user_avatar
      
     login_user(user)
     
