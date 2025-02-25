@@ -91,7 +91,6 @@
 }
 
 .message {
-    align-items: flex-start;
     background-color: #fff;
     padding: 10px 15px;
     border-radius: 12px;
@@ -110,14 +109,8 @@
 }
 
 .message-bubble {
-    background-color: #ffffff;
     display: flex;
     flex-direction: column;
-    flex-direction: column;
-    max-width: 70%;
-    border-radius: 10px;
-    padding: 8px 12px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .user-message {
@@ -127,9 +120,5 @@
 
 .user-message .message {
     background-color: #ffe8e8;
-}
-
-.text {
-    font-size: 14px;
 }
 
