@@ -98,14 +98,14 @@ login_manager.login_view = 'login'
         
 @socketio.on('connect')
 def handle_connect():
-    print(f"New connection: {request.sid}")
+    #print(f"New connection: {request.sid}")
     user_id = request.args.get('user_id')
     email = request.args.get('email')
     avatar = request.args.get('avatar')
   
     print(f"Received user_id: {user_id}, email: {email}, avatar: {avatar}")
   
-    if user_id and email:
+    if user_id:
         online_users[user_id] = {"email": email, "avatar": avatar, "session_id": request.sid}
         print(f"Online users: {online_users}")
         emit('update_online_users', list(online_users.values()), broadcast=True)
