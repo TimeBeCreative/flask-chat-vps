@@ -397,7 +397,7 @@
 
 
 
-            var socket = io(window.location.origin, { transports: ['websocket', 'polling'] });
+            var socket = io("web-production-b946f.up.railway.app", { transports: ['websocket', 'polling'] });
 
             socket.on('message', function(msg) {
                 var li = document.createElement("li");
