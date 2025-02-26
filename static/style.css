@@ -58,6 +58,7 @@
 }
 
 #messages {
+    overflow: scroll;
     overflow-y: scroll;
     padding: 20px;
     border-radius: 10px;
@@ -65,10 +66,17 @@
     border: 1px solid #ddd;
     margin: 0;
     width: 80%;
-    margin-left: auto;
-    margin-right: auto;
+    margin-left: 0;
     list-style-type: none;
+    float: left;
+    height: 500px;
     
+    
+}
+
+#messages {
+    display: flex;
+    flex-direction: column-reverse;
 }
 
 #messages li {
@@ -149,5 +157,22 @@ button {
 }
 
 button:hover {
+    background-color: darkred;
+}
+
+#toggleChatsButton {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: #ff0000;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+#toggleChatsButton:hover {
     background-color: darkred;
 }

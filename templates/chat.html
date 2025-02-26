@@ -85,6 +85,7 @@
 
             //    li.appendChild(messageContainer);
                 document.getElementById("messages").appendChild(li);
+                scrollToBottom();
 
             });
 
@@ -94,6 +95,10 @@
 
                 socket.emit('message', msg);
                 document.getElementById("message").value = "";
+            }
+            function scrollToBottom() {
+                const messageContainer = document.getElementById('messages');
+                messageContainer.scrollTop = messageContainer.scrollHeight;
             }
         </script>
 
