@@ -139,33 +139,40 @@
             </script>
         </div>
 
-        <button onclick="openChatRequestModal()">Start Chat</button>
-
-        <div id="openChatRequestModal" class="modal">
-            <div class="modal-content">
-                <span class="close" onclick="closeOpenChatRequestModal()">&times;</span>
-                <h2>Start Chat</h2>
-                <input type="email" id="recipientEmail" placeholder="Write an email to start a chat with">
-                <button onclick="sendChatRequest()">Send Request</button>
-            </div>
-        </div>
-
-        <button onclick="fetchChatRequests()">View requests</button>
-        <div id="ChatRequestModal" class="modal">
-            <div class="modal-content">
-                <span class="close" onclick="closeChatRequestModal()">&times;</span>
-                <h2>Chat requests</h2>
-                <ul id="chatRequestsList"></ul>
-            </div>
-        </div>
-
-
-
         
-        
-        <button onclick="logout()">logout</button>
+
+       
 
         <div class="chat-container">
+
+            <button onclick="openChatRequestModal()">Start Chat</button>
+
+            <div id="openChatRequestModal" class="modal">
+                <div class="modal-content">
+                    <span class="close" onclick="closeOpenChatRequestModal()">&times;</span>
+                    <h2>Start Chat</h2>
+                    <input type="email" id="recipientEmail" placeholder="Write an email to start a chat with">
+                    <button onclick="sendChatRequest()">Send Request</button>
+                </div>
+            </div>
+
+            <button onclick="fetchChatRequests()">View requests</button>
+            <div id="ChatRequestModal" class="modal">
+                <div class="modal-content">
+                    <span class="close" onclick="closeChatRequestModal()">&times;</span>
+                    <h2>Chat requests</h2>
+                    <ul id="chatRequestsList"></ul>
+                </div>
+            </div>
+    
+    
+    
+            
+            
+            <button onclick="logout()">logout</button>
+
+
+
             <ul id="messages"></ul>
             <div class="message-input-container">
                 <input type="text" id="message" autocomplete="off" placeholder="Type a message...">
