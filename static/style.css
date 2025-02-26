@@ -69,7 +69,6 @@
     margin-left: 0;
     list-style-type: none;
     float: left;
-    height: 400px;
     display: flex;
     height: calc(100% - 70px);
     flex-direction: column;
@@ -90,14 +89,14 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    background-color: #ff0000;
     padding: 15px;
     border-radius: 15px;
     max-width: 600px;
     overflow: auto;
     height: 80vh;
     max-width: 600px;
-    margin: auto;
+    margin-left: 20px;
+    position: relative;
 }
 
 .message {
