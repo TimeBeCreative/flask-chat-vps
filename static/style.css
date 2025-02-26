@@ -94,10 +94,11 @@
     max-width: 100%;
     overflow: hidden;
     height: 80vh;
-    max-width: 600px;
+    width: 100%;
     margin-left: 20px;
     position: relative;
     margin-right: 20px;
+    box-sizing: border-box;
 }
 
 .message {
