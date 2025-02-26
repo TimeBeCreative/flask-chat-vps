@@ -165,10 +165,17 @@
 
 
 
-        <ul id="messages"></ul>
-        <input id="message" autocomplete="off">
-        <button onclick="sendMessage()">Send</button>
+        
+        
         <button onclick="logout()">logout</button>
+
+        <div class="chat-container">
+            <ul id="messages"></ul>
+            <div class="message-input-container">
+                <input type="text" id="message" autocomplete="off" placeholder="Type a message...">
+                <button onclick="sendMessage()">Send</button>
+            </div>
+        </div>
 
     
         {% endif %}

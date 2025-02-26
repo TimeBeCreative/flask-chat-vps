@@ -27,10 +27,14 @@
     <body>
         <h1>Chat with {{ recipient_name }}</h1>
 
-        <ul id="messages"></ul>
-
-        <input id="message" autocomplete="off">
-        <button onclick="sendMessage()">Send</button>
+        <div class="chat-container">
+            <ul id="messages"></ul>
+            <div class="message-input-container">
+                <input type="text" id="message" autocomplete="off" placeholder="Type a message...">
+                <button onclick="sendMessage()">Send</button>
+            </div>
+        </div>
+        
         <button onclick="window.location.href='/'">Back to Chats</button>
 
         <script>
