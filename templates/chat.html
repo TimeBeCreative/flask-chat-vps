@@ -34,6 +34,8 @@
     <body>
         <h1 class="chat-title">Chat with {{ recipient_name }}</h1>
 
+        <button onclick="window.location.href='/'">Back to Chats</button>
+
         <div class="chat-container">
             <ul id="messages"></ul>
             <div class="message-input-container">
@@ -42,7 +44,7 @@
             </div>
         </div>
 
-        <button onclick="window.location.href='/'">Back to Chats</button>
+      
 
         <script>
             var socket = io("web-production-b946f.up.railway.app", { transports: ['websocket', 'polling'] });
