@@ -165,9 +165,10 @@ button:hover {
 }
 
 #toggleChatsButton {
+    
     position: fixed;
     top: 20px;
-    right: 20px;
+    right: 0px;
     background-color: #ff0000;
     color: white;
     border: none;
@@ -178,6 +179,11 @@ button:hover {
     width: auto;
     margin-left: 20px;
     margin-right: 20px;
+    max-width: 14%;
+
+      transform: translate(-50%);
+    justify-content: center;
+    display: flex;
 }
 
 #toggleChatsButton:hover {
@@ -208,7 +214,8 @@ body, html {
     top: 20px;
     left: 20px;
     display: flex;
-  
+    height:60px;
+    width: initial;
 
 }
 .logoText {
@@ -218,6 +225,8 @@ body, html {
     justify-content: center;
     display: flex;
    align-items: flex-start;
+    white-space: nowrap;
+    max-width: 40%;
 }
 
 .header {
