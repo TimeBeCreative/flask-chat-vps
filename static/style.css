@@ -294,6 +294,7 @@ body, html {
 }
 
 .chat-title {
+    font-size: 30px;
     font-family:cursive;
     position: absolute;
     left: 50%;
@@ -303,4 +304,17 @@ body, html {
     align-items: flex-start;
      white-space: nowrap;
      max-width: 40%;
+}
+
+@media (max-width: 768px) {
+    .chat-title {
+        font-size: 24px;
+        padding-left: 8px;
+    }
+}
+@media (max-width: 480px) {
+    .chat-title {
+        font-size: 18px;
+        padding-left: 5px;
+    }
 }
