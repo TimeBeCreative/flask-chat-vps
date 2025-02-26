@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
+        <link rel="stylesheet" href="{{ url_for('static', filename ='style.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename ='style.css') }}">
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Chat with {{ recipient_name }}</title>
@@ -9,14 +11,14 @@
         <style>
             .message-container {
                 display: flex;
-                align-items: center;
+                align-items: left;
             }
             .message {
                 margin-left: 10px;
             }
             .avatar {
-                width: 30px;
-                height: 30px;
+                width: 32px;
+                height: 32px;
                 border-radius: 50%;
                 margin-right: 10px;
             }
@@ -36,37 +38,52 @@
 
             socket.on('message', function(msg) {
                 var li = document.createElement("li");
+                li.classList.add("message-container");
 
-                var avatarUrl = msg.avatar_url;
-                var username = msg.username;
-                var message = msg.message;
+                li.innerHTML = `
+                    <img class="avatar" src="${msg.avatar_url}" alt="Avatar">
+                    <div class="message-bubble">
+                        <div class="username">${msg.username}:</div>
+                        <div class="text">${msg.message}</div>
+                    </div>
+                `;
 
-                var messageContainer = document.createElement("div");
-                messageContainer.classList.add("message-container");
+               // const avatarUrl = msg.avatar_url;
+              // // const username = msg.username;
+              //  const message = msg.message;
 
-                var avatarElement = document.createElement("img");
-                avatarElement.classList.add("avatar");
-                avatarElement.src = avatarUrl;
+               // var messageContainer = document.createElement("div");
+              //  messageContainer.classList.add("message-container");
+
+             //   var avatarElement = document.createElement("img");
+             //   avatarElement.classList.add("avatar");
+             //   avatarElement.src = avatarUrl;
+
+
+
                // var username = msg.split(':')[0];
              //   var message = msg.split(':').slice(1).join(':');
 
-                var nameElement = document.createElement("span");
-                nameElement.classList.add("username");
-                nameElement.textContent = username + ": ";
-
-                var messageElement = document.createElement("span");
-                messageElement.classList.add("message");
-                messageElement.textContent = message;
 
 
+             //   var nameElement = document.createElement("span");
+              //  nameElement.classList.add("username");
+              //  nameElement.textContent = username + ": ";
+
+             //   var messageElement = document.createElement("span");
+            //    messageElement.classList.add("message");
+              //  messageElement.textContent = message;
 
 
-                messageContainer.appendChild(avatarElement);
-                messageContainer.appendChild(nameElement);
-                messageContainer.appendChild(messageElement);
 
-               // li.appendChild(nameElement);
-                li.appendChild(messageContainer);
+
+           //     messageContainer.appendChild(avatarElement);
+           //     messageContainer.appendChild(nameElement);
+          //      messageContainer.appendChild(messageElement);
+
+           //    // li.appendChild(nameElement);
+
+            //    li.appendChild(messageContainer);
                 document.getElementById("messages").appendChild(li);
 
             });
