@@ -58,7 +58,7 @@
 }
 
 #messages {
-    overflow: scroll;
+    overflow-x: hidden;
     overflow-y: scroll;
     padding: 20px;
     border-radius: 10px;
@@ -91,8 +91,8 @@
     justify-content: space-between;
     padding: 15px;
     border-radius: 15px;
-    max-width: 600px;
-    overflow: auto;
+    max-width: 100%;
+    overflow: hidden;
     height: 80vh;
     max-width: 600px;
     margin-left: 20px;
@@ -175,6 +175,9 @@ button:hover {
     cursor: pointer;
     font-size: 16px;
     width: auto;
+    margin-left: 20px;
+    position: relative;
+    margin-right: 20px;
 }
 
 #toggleChatsButton:hover {
@@ -185,6 +188,7 @@ button:hover {
     width: 80%;
     padding: 10px;
     border-radius: 5px;
+    box-sizing: border-box;
 }
 
 .message-input-container {
@@ -192,4 +196,9 @@ button:hover {
     justify-content: space-between;
     padding: 10px;
     width: 100%;
+    box-sizing: border-box;
+}
+
+body, html {
+    overflow-x: hidden;
 }
