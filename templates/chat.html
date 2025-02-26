@@ -9,6 +9,9 @@
         <script src="https://cdn.socket.io/4.0.1/socket.io.min.js"></script>
 
         <style>
+            .chat-title {
+                color:rgb(255, 0, 0);
+            }
             .message-container {
                 display: flex;
                 align-items: left;
@@ -22,10 +25,14 @@
                 border-radius: 50%;
                 margin-right: 10px;
             }
+            .username {
+                font-weight: bold;
+                margin-left: 10px;
+            }
         </style>
     </head>
     <body>
-        <h1>Chat with {{ recipient_name }}</h1>
+        <h1 class="chat-title">Chat with {{ recipient_name }}</h1>
 
         <div class="chat-container">
             <ul id="messages"></ul>
@@ -34,7 +41,7 @@
                 <button onclick="sendMessage()">Send</button>
             </div>
         </div>
-        
+
         <button onclick="window.location.href='/'">Back to Chats</button>
 
         <script>
@@ -106,5 +113,8 @@
             }
         </script>
 
+        <footer class="footer">
+            <p>&copy; 2025 TimeBeCreativeChat. All rights reserved.</p>
+        </footer>
     </body>
 </html>
