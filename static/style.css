@@ -295,4 +295,12 @@ body, html {
 
 .chat-title {
     font-family:cursive;
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%);
+     justify-content: center;
+     display: flex;
+    align-items: flex-start;
+     white-space: nowrap;
+     max-width: 40%;
 }
