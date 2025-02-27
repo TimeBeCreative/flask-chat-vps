@@ -345,7 +345,7 @@ def user_connected():
 
         print(f"User connected: {user_name}, {email}, {avatar}")
     
-        online_users[email] = {"name": user_name, "email": email, "avatar": avatar}
+        online_users[email] = {"user_name": user_name, "email": email, "avatar": avatar}
         emit('online_users', list(online_users.values()), broadcast=True)
    
         
