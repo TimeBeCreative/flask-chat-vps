@@ -13,25 +13,30 @@
         <img src="/static/images/LogoSmall.png" alt="Logo" class="logoSmall">
         <img src="/static/images/LogoText.png" alt="Logo" class="logoText">
 
-        <div id="about-content">Loading...</div>
-        <script>
-            fetch('static/about.txt')
-                .then(response => response.text())
-                .then(text => {
-                    let content = document.getElementById('about-content');
-                    content.innerText = text;
-                    content.classList.add('about-content');
-                })
-            .catch(error => console.error(error));
-        </script>
-    
-        <a href="{{ url_for('index') }}">Back</a>
-        <a href="{{ url_for('index') }}" class="back-btn">Back</a>
+       
 
 
     </div>
-    
 
+    <div class="about-container">
+        <div id="about-content">Loading...</div>
+        <a href="{{ url_for('index') }}" class="back-btn">Back</a>
+    </div>
+    
+    
+    <script>
+        fetch('static/about.txt')
+            .then(response => response.text())
+            .then(text => {
+                let content = document.getElementById('about-content');
+                content.innerText = text;
+                content.classList.add('about-content');
+            })
+        .catch(error => console.error(error));
+    </script>
+
+    
+   
   
 
    
