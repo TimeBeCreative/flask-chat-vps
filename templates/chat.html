@@ -80,6 +80,7 @@
                 var msg = document.getElementById("message").value.trim();
                 if (msg === "") return;
 
+                console.log("Sending message:", msg); 
                 socket.emit('private-message', { chat_id: chat_id, message: msg });
                 document.getElementById("message").value = "";
             }
