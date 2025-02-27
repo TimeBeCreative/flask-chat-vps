@@ -151,6 +151,10 @@ def login():
     return google.authorize_redirect(
         url_for('authorized', _external=True, _scheme='https')
         )
+    
+@app.route('/about')
+def about():
+    return render_template('about.html')
 
 @app.route('/logout')
 @login_required

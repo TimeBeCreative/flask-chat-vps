@@ -36,6 +36,24 @@
     transform: scale(1.05);
 }
 
+.about-btn {
+    width: 414px;
+    height: 92px;
+    background-image: url('/static/images/About.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    border: none;
+    cursor: pointer;
+    display: block;
+    text-indent: -9999px;
+    border-radius: 50px;
+    transition: 0.3s;
+}
+.about-btn:hover {
+    transform: scale(1.05);
+}
+
 #online-users {
     width: 250px;
     background: #ff0000;
