@@ -154,7 +154,7 @@ def login():
     
 @app.route('/about')
 def about():
-    return render_template('about.html')
+    return render_template('about1.html')
 
 @app.route('/logout')
 @login_required
