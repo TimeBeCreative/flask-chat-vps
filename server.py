@@ -333,6 +333,32 @@ def chat(chat_id):
     recipient_name = other_users[0].name if len(other_users) == 1 else "Group chat"
     return render_template('chat.html', chat_id=chat_id, recipient_name=recipient_name)
 
+online_users = {}
+
+@socketio.on('connect')
+def handle_connect():
+   
+    user_name = request.args.get('user_name')
+    email = request.args.get('email')
+    avatar = request.args.get('avatar')
+    
+    
+    if email and email not in online_users:
+        online_users[email] = {"user_name": user_name, "email": email, "avatar": avatar}
+        emit('online_users', list(online_users.values()), broadcast=True)
+   
+        
+@socketio.on('disconnect')
+def handle_disconnect():
+    user_name = request.args.get('user_name')
+    email = request.args.get('email')
+   
+    
+    if email in online_users:
+        del online_users[email]
+        emit('online_users', list(online_users.values()), broadcast=True)
+    
+
     
 if __name__ == '__main__':
     with app.app_context():
