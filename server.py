@@ -340,13 +340,13 @@ online_users = {}
 def user_connected():
    
     if "email" in session:
-        user_name = session.get('user_name')
+        user_name = session.get('name')
         email = session.get('email')
         avatar = session.get('avatar')
 
         print(f"User connected: {user_name}, {email}, {avatar}")
     
-        if email and user_name and avatar:
+        if email:
             online_users[email] = {"name": user_name, "email": email, "avatar": avatar}
             emit('online_users', list(online_users.values()), broadcast=True)
    
