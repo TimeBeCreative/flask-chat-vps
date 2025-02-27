@@ -340,7 +340,7 @@ online_users = {}
 def user_connected():
    
     if "email" in session:
-        user_name = session.get('name')
+        user_name = session.get('user_name')
         email = session.get('email')
         avatar = session.get('avatar')
 
