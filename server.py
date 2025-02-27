@@ -317,6 +317,9 @@ online_users = {}
 
 @socketio.on("user_connected")
 def user_connected():
+    chat_id = session.get('chat_id')
+    if chat_id:
+        join_room(f"chat_{chat_id}")
     print("SESSION DATA", session)
    
     if "email" in session:
