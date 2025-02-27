@@ -50,8 +50,23 @@
     border-radius: 50px;
     transition: 0.3s;
 }
-.about-btn:hover {
+.about-btn:hover, .back-btn:hover {
     transform: scale(1.05);
+}
+
+.back-btn {
+    width: 414px;
+    height: 92px;
+    background-image: url('/static/images/Back.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    border: none;
+    cursor: pointer;
+    display: block;
+    text-indent: -9999px;
+    border-radius: 50px;
+    transition: 0.3s;
 }
 
 #online-users {

@@ -7,5 +7,5 @@ and request the email of the person you want
 to chat with in a private chat. 
 Also you can see who is online. 
 A lot of work went into creating this chat. 
-In addition to writing the server.py and html logic, 
+In addition to writing the server and html logic, 
 I worked on the CSS and databases.
