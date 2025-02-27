@@ -353,7 +353,7 @@ def private_message(data):
     if not chat_id or not msg:
         return
     chat = Chat.query.get(chat_id)
-    if not chat or current_user not in chat.users:
+    if not chat:
         return
     
     new_message = Message(chat_id=chat_id, sender_id=current_user.id, content=msg)
