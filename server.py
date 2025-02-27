@@ -339,9 +339,9 @@ online_users = {}
 def user_connected():
    
     if "email" in session:
-        user_name = session('user_name')
-        email = session('email')
-        avatar = session('avatar')
+        user_name = session.get('user_name')
+        email = session.get('email')
+        avatar = session.get('avatar')
     
     
         online_users[email] = {"name": user_name, "email": email, "avatar": avatar}
@@ -351,10 +351,10 @@ def user_connected():
 @socketio.on("disconnect")
 def user_disconnected():
     if "email" in session:
-        email = session('email')
-        online_users.pop(email, None)
-        emit('online_users', list(online_users.values()), broadcast=True)
-   
+        email = session.get('email')
+        if email in online_users:
+            del online_users[email]
+            emit('online_users', list(online_users.values()), broadcast=True)
     
     
 
