@@ -55,7 +55,39 @@
         <script>
             var socket = io("web-production-b946f.up.railway.app", { transports: ['websocket', 'polling'] });
 
-            socket.on('message', function(msg) {
+            var chat_id = "{{ chat_id }}";
+
+            window.onload = function() {
+                socket.emit('load_chat_history', { chat_id: chat_id });
+            };
+
+            socket.on('chat_history', function(data) {
+               var messagesList = document.getElementById("messages");
+                messagesList.innerHTML = "";
+                data.messages.forEach(function(msg) {
+                    addMessage(msg);
+                });
+            });
+
+
+
+            socket.on('private-message', function(msg) {
+                addMessage(msg);
+
+            });
+
+            function sendMessage() {
+                var msg = document.getElementById("message").value.trim();
+                if (msg === "") return;
+
+                socket.emit('private-message', { chat_id: chat_id, message: msg });
+                document.getElementById("message").value = "";
+            }
+           
+
+
+
+            function addMessage(msg) {
                 var li = document.createElement("li");
                 li.classList.add("message-container");
 
@@ -67,54 +99,13 @@
                     </div>
                 `;
 
-               // const avatarUrl = msg.avatar_url;
-              // // const username = msg.username;
-              //  const message = msg.message;
-
-               // var messageContainer = document.createElement("div");
-              //  messageContainer.classList.add("message-container");
-
-             //   var avatarElement = document.createElement("img");
-             //   avatarElement.classList.add("avatar");
-             //   avatarElement.src = avatarUrl;
-
-
-
-               // var username = msg.split(':')[0];
-             //   var message = msg.split(':').slice(1).join(':');
-
-
-
-             //   var nameElement = document.createElement("span");
-              //  nameElement.classList.add("username");
-              //  nameElement.textContent = username + ": ";
-
-             //   var messageElement = document.createElement("span");
-            //    messageElement.classList.add("message");
-              //  messageElement.textContent = message;
-
-
-
-
-           //     messageContainer.appendChild(avatarElement);
-           //     messageContainer.appendChild(nameElement);
-          //      messageContainer.appendChild(messageElement);
-
-           //    // li.appendChild(nameElement);
-
-            //    li.appendChild(messageContainer);
                 document.getElementById("messages").appendChild(li);
                 scrollToBottom();
-
-            });
-
-            function sendMessage() {
-                var msg = document.getElementById("message").value;
-                if (msg.trim() === "") return;
-
-                socket.emit('message', msg);
-                document.getElementById("message").value = "";
             }
+
+
+
+
             function scrollToBottom() {
                 const messageContainer = document.getElementById('messages');
                 messageContainer.scrollTop = messageContainer.scrollHeight;

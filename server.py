@@ -4,7 +4,7 @@ eventlet.monkey_patch()
 from flask import request, jsonify
 from flask import Flask, render_template, redirect, url_for, session
 from flask_sqlalchemy import SQLAlchemy
-from flask_socketio import SocketIO, send
+from flask_socketio import SocketIO, join_room, send
 from flask_socketio import SocketIO, emit
 from collections import defaultdict
 from flask_cors import CORS
@@ -61,6 +61,16 @@ class ChatRequest(db.Model):
     sender = db.relationship('User', foreign_keys=[sender_id])
     recipient = db.relationship('User', foreign_keys=[recipient_id])
 
+class Message(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    chat_id = db.Column(db.Integer, db.ForeignKey('chat.id'), nullable=False)
+    sender_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    content = db.Column(db.Text, nullable=False)
+    timestamp = db.Column(db.DateTime, server_default=db.func.now())
+    
+   
+    sender = db.relationship('User', backref='messages')
+    chat = db.relationship('Chat', backref='messages')
 
 
 #Google OAuth
@@ -89,44 +99,7 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
-#class User(UserMixin):
- #   def __init__(self, user_id, name, email, avatar_url):
- #       self.id = user_id
-  #      self.name = name
-  #      self.email = email
-  #      self.avatar_url = avatar_url
-        
-#@socketio.on('connect')
-#def handle_connect():
-    #print(f"New connection: {request.sid}")
-  #  user_id = session.get('user_id')
-  #  email = session.get('email')
- #   avatar = session.get('avatar')
-  
-  #  print(f"Received user_id: {user_id}, email: {email}, avatar: {avatar}")
-  
-   # if user_id:
-  #      online_users[user_id] = {"email": email, "avatar": avatar, "session_id": request.sid}
-  #      print(f"Online users: {online_users}")
-  #      emit('update_online_users', list(online_users.values()), broadcast=True)
-  #  else:
-  #      print("Missing user_id or email")
-
-#@socketio.on('disconnect')
-#def handle_disconnect():
-  #  user_id = None
-  #  for uid, data in list(online_users.items()):
-   #     if data["session_id"] == request.sid:
-   #         user_id = uid
-   #         del online_users[uid]
-   #         break
-        
-   # if user_id:
-    #    print(f"User {user_id} disconnected")
-    #    emit('update_online_users', list(online_users.values()), broadcast=True)
-   # else:
-   #     print("User not found in online_users")
-            
+      
             
         
         
@@ -356,6 +329,10 @@ def user_connected():
         if email:
             online_users[email] = {"name": user_name, "email": email, "avatar": avatar}
             emit('online_users', list(online_users.values()), broadcast=True)
+            
+            if 'chat_id' in session:
+                chat_id = session.get('chat_id')
+                join_room(f"chat_{chat_id}")
    
         
 @socketio.on("disconnect")
@@ -367,7 +344,49 @@ def user_disconnected():
             emit('online_users', list(online_users.values()), broadcast=True)
     
     
-
+    
+@socketio.on('private-message')
+def private_message(data):
+    chat_id = data.get('chat_id')
+    msg = data.get('message')
+    
+    if not chat_id or not msg:
+        return
+    chat = Chat.query.get(chat_id)
+    if not chat or current_user not in chat.users:
+        return
+    
+    new_message = Message(chat_id=chat_id, sender_id=current_user.id, content=msg)
+    db.session.add(new_message)
+    db.session.commit()
+    
+    message_data = {
+        'username': current_user.name,
+        'avatar_url': current_user.avatar_url,
+        'message': msg,
+        'chat_id': chat_id
+    }
+    send(message_data, room=f"chat_{chat_id}")
+    
+@socketio.on('load_chat_history')
+def load_chat_history(data):
+    chat_id = data.get('chat_id')
+    chat = Chat.query.get(chat_id)
+    
+    if not chat or current_user not in chat.users:
+        return
+    messages = Message.query.filter_by(chat_id=chat_id).order_by(Message.timestamp).all()
+    history = [{
+        'username': msg.sender.name,
+        'avatar_url': msg.sender.avatar_url,
+        'message': msg.content,
+        'timestamp': msg.timestamp.strftime('%Y-%m-%d %H:%M:%S')
+    } for msg in messages]
+   
+    emit('chat_history', {'chat_id': chat_id, 'messages': history}, room=f"chat_{chat_id}")
+    
+    
+    
     
 if __name__ == '__main__':
     with app.app_context():
