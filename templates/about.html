@@ -17,10 +17,19 @@
     </div>
     
 
-  <p>Hello, welcome to this chat! Enjoy using it. I am Viktoriya Cherevatenko and dream of developing it into the perfect chat for communication. I'm programming this chat in Visual Studio Code.  You can chat in a public chat, or click Start Chat and request the email of the person you want to chat with in a private chat. Also you can see who is online. A lot of work went into creating this chat. In addition to writing the server.py and html logic, I worked on the CSS and databases.</p>
   <a href="{{ url_for('index') }}">Back</a>
 
-  
+    <div id="about-content">Loading...</div>
+    <script>
+        fetch('about.txt')
+            .then(response => response.text())
+            .then(text => {
+                document.getElementById('about-content').innerText = text);
+            })
+        .catch(error => console.error(error));
+    </script>
+
+    
   <footer class="footer">
     <p>&copy; 2025 TimeBeCreativeChat. All rights reserved.</p>
   </footer>
