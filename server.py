@@ -178,6 +178,8 @@ def authorized():
     session['email'] = user_email
     session['avatar'] = user_avatar
     
+    print("Saving to session", session)
+    
     user = User.query.filter_by(user_id=user_id).first()
     
     if not user:
@@ -338,6 +340,7 @@ online_users = {}
 
 @socketio.on("user_connected")
 def user_connected():
+    print("SESSION DATA", session)
    
     if "email" in session:
         user_name = session.get('user_name')
