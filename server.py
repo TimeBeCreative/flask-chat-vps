@@ -174,6 +174,7 @@ def authorized():
     user_email = user_info.get('email', 'Unknow')
     
     session['user_id'] = user_id
+    session['user_name'] = user_name
     session['email'] = user_email
     session['avatar'] = user_avatar
     
@@ -345,8 +346,9 @@ def user_connected():
 
         print(f"User connected: {user_name}, {email}, {avatar}")
     
-        online_users[email] = {"user_name": user_name, "email": email, "avatar": avatar}
-        emit('online_users', list(online_users.values()), broadcast=True)
+        if email and user_name and avatar:
+            online_users[email] = {"name": user_name, "email": email, "avatar": avatar}
+            emit('online_users', list(online_users.values()), broadcast=True)
    
         
 @socketio.on("disconnect")
