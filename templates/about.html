@@ -24,7 +24,9 @@
         fetch('static/about.txt')
             .then(response => response.text())
             .then(text => {
-                document.getElementById('about-content').innerText = text;
+                let content = document.getElementById('about-content');
+                content.innerText = text;
+                content.classList.add('about-content');
             })
         .catch(error => console.error(error));
     </script>
