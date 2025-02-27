@@ -21,7 +21,7 @@
 
     <div id="about-content">Loading...</div>
     <script>
-        fetch('about.txt')
+        fetch('static/about.txt')
             .then(response => response.text())
             .then(text => {
                 document.getElementById('about-content').innerText = text;
