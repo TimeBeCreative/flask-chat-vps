@@ -160,8 +160,8 @@
         <script>
             var socket = io();
             socket.on('online_users', function(users) {
-                var onlineUsersList = document.getElementById('onlineUsersList');
-                onlineUsersList.innerHTML = '';
+                var onlineUsersList = document.getElementById("onlineUsersList");
+                onlineUsersList.innerHTML = "";
                 users.forEach(function(user) {
                     var li = document.createElement('li');
                     li.innerHTML = `
@@ -171,13 +171,13 @@
                     onlineUsersList.appendChild(li);
                 });
             });
-            var user_name = prompt('Enter your username');
-            var email = prompt('Enter your email');
-            var avatar = prompt('Enter your avatar url');
-            if (user_name && email && avatar) {
-                socket.emit('connect', { name: user_name, email: email, avatar: avatar });
-               
-            }
+           window.onload = function() {
+                socket.emit("user_connected");
+            //        user_id: '{{  session["user_id"] }}',
+             //       email: '{{  session["email"] }}',
+            //        avatar: '{{  session["avatar"] }}'
+            //    });
+            };
         </script>
 
     

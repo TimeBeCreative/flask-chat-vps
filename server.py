@@ -335,28 +335,27 @@ def chat(chat_id):
 
 online_users = {}
 
-@socketio.on('connect')
-def handle_connect():
+@socketio.on("user_connected")
+def user_connected():
    
-    user_name = request.args.get('user_name')
-    email = request.args.get('email')
-    avatar = request.args.get('avatar')
+    if "email" in session:
+        user_name = session('user_name')
+        email = session('email')
+        avatar = session('avatar')
     
     
-    if email and email not in online_users:
-        online_users[email] = {"user_name": user_name, "email": email, "avatar": avatar}
+        online_users[email] = {"name": user_name, "email": email, "avatar": avatar}
         emit('online_users', list(online_users.values()), broadcast=True)
    
         
-@socketio.on('disconnect')
-def handle_disconnect():
-    user_name = request.args.get('user_name')
-    email = request.args.get('email')
+@socketio.on("disconnect")
+def user_disconnected():
+    if "email" in session:
+        email = session('email')
+        online_users.pop(email, None)
+        emit('online_users', list(online_users.values()), broadcast=True)
    
     
-    if email in online_users:
-        del online_users[email]
-        emit('online_users', list(online_users.values()), broadcast=True)
     
 
     
