@@ -60,9 +60,9 @@
             const userAvatarUrl = "{{ current_user.avatar_url }}";
 
 
-            socket.emit("user_connected", { chat_id: chatId });
+            socket.emit("user_connected", { chat_id: chat_id });
 
-            socket.emit('load_chat_history', { chat_id: chatId });
+            socket.emit('load_chat_history', { chat_id: chat_id });
 
             socket.on('chat_history', function(data) {
                 if (data.chat_id === chat_id) {
@@ -79,21 +79,24 @@
             });
 
             function sendMessage() {
-                const message = $('#new-message').val();
-                if (message.trim() === '') {
-                    soclet.emit('private-message', { chat_id: chat_id, message: message });
-                    $('#new-message').val('');
+                const message = $('#message').val();
+                if (message.trim() !== '') {
+                    socket.emit('private-message', { chat_id: chat_id, message: message });
+                    $('#message').val('');
+                    scrollToBottom();
                 }
             }
 
-            soclet.on('private-message', function(data) {
+            socket.on('private-message', function(data) {
                 if (data.chat_id === chat_id) {
                     const messagesDiv = $('#messages');
                     const messageElement = `<div class="message">
                                                 <span class="username">${data.username}</span>: ${data.message}
                                             </div>`;
                     messagesDiv.append(messageElement);
-                    messagesDiv.scrollTop(#messages[0].scrollHeight);
+                
+
+                    scrollToBottom();
                 }
             });
 
