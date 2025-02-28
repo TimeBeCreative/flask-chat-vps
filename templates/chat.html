@@ -84,7 +84,7 @@
                     soclet.emit('private-message', { chat_id: chat_id, message: message });
                     $('#new-message').val('');
                 }
-            });
+            }
 
             soclet.on('private-message', function(data) {
                 if (data.chat_id === chat_id) {
