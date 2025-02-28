@@ -59,18 +59,21 @@
                 var li = document.createElement("li");
                 li.classList.add("message-container");
 
-                li.innerHTML = 
+                li.innerHTML = `
                     <img class="avatar" src="${msg.avatar_url}" alt="Avatar">
                     <div class="message-bubble">
                         <div class="username">${msg.username}:</div>
                         <div class="text">${msg.message}</div>
                     </div>
-                ;
+                `;
 
-             
+               
 
 
+                document.getElementById("messages").appendChild(li);
+                scrollToBottom();
 
+            });
 
             function sendMessage() {
                 var msg = document.getElementById("message").value;
