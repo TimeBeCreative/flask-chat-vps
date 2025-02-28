@@ -7,7 +7,6 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Chat with {{ recipient_name }}</title>
         <script src="https://cdn.socket.io/4.0.1/socket.io.min.js"></script>
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
         <style>
             .chat-title {
@@ -56,89 +55,30 @@
         <script>
             var socket = io("web-production-b946f.up.railway.app", { transports: ['websocket', 'polling'] });
 
-            const chat_id = "{{ chat_id }}";
-            const userName = "{{ current_user.name }}";
-            const userAvatarUrl = "{{ current_user.avatar_url }}";
+            socket.on('message', function(msg) {
+                var li = document.createElement("li");
+                li.classList.add("message-container");
+
+                li.innerHTML = 
+                    <img class="avatar" src="${msg.avatar_url}" alt="Avatar">
+                    <div class="message-bubble">
+                        <div class="username">${msg.username}:</div>
+                        <div class="text">${msg.message}</div>
+                    </div>
+                ;
+
+             
 
 
-            socket.emit("user_connected", { chat_id: chat_id });
 
-            socket.emit('load_chat_history', { chat_id: chat_id });
-
-            socket.on('chat_history', function(data) {
-                if (data.chat_id === chat_id) {
-                    const messagesDiv = $('#messages');
-                    messagesDiv.empty();
-                    data.messages.forEach(function(msg) {
-                        const messageElement = `<div class="message">
-                                                    <span class="username">${msg.username}</span>: ${msg.message}
-                                                </div>`;
-                        messagesDiv.append(messageElement);
-                    });
-                    messagesDiv.scrollTop(messagesDiv[0].scrollHeight);
-                }
-            });
 
             function sendMessage() {
-                const message = $('#message').val();
-                if (message.trim() !== '') {
-                    socket.emit('private-message', { chat_id: chat_id, message: message });
-                    $('#message').val('');
-                    scrollToBottom();
-                }
+                var msg = document.getElementById("message").value;
+                if (msg.trim() === "") return;
+
+                socket.emit('message', msg);
+                document.getElementById("message").value = "";
             }
-
-            socket.on('private-message', function(data) {
-                if (data.chat_id === chat_id) {
-                    const messagesDiv = $('#messages');
-                    const messageElement = `<div class="message">
-                                                <span class="username">${data.username}</span>: ${data.message}
-                                            </div>`;
-                    messagesDiv.append(messageElement);
-                
-
-                    scrollToBottom();
-                }
-            });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             function scrollToBottom() {
                 const messageContainer = document.getElementById('messages');
                 messageContainer.scrollTop = messageContainer.scrollHeight;

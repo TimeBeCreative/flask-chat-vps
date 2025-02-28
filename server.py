@@ -99,7 +99,44 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
-      
+#class User(UserMixin):
+ #   def __init__(self, user_id, name, email, avatar_url):
+ #       self.id = user_id
+  #      self.name = name
+  #      self.email = email
+  #      self.avatar_url = avatar_url
+        
+#@socketio.on('connect')
+#def handle_connect():
+    #print(f"New connection: {request.sid}")
+  #  user_id = session.get('user_id')
+  #  email = session.get('email')
+ #   avatar = session.get('avatar')
+  
+  #  print(f"Received user_id: {user_id}, email: {email}, avatar: {avatar}")
+  
+   # if user_id:
+  #      online_users[user_id] = {"email": email, "avatar": avatar, "session_id": request.sid}
+  #      print(f"Online users: {online_users}")
+  #      emit('update_online_users', list(online_users.values()), broadcast=True)
+  #  else:
+  #      print("Missing user_id or email")
+
+#@socketio.on('disconnect')
+#def handle_disconnect():
+  #  user_id = None
+  #  for uid, data in list(online_users.items()):
+   #     if data["session_id"] == request.sid:
+   #         user_id = uid
+   #         del online_users[uid]
+   #         break
+        
+   # if user_id:
+    #    print(f"User {user_id} disconnected")
+    #    emit('update_online_users', list(online_users.values()), broadcast=True)
+   # else:
+   #     print("User not found in online_users")
+            
             
         
         
@@ -317,9 +354,6 @@ online_users = {}
 
 @socketio.on("user_connected")
 def user_connected():
-    chat_id = session.get('chat_id')
-    if chat_id:
-        join_room(f"chat_{chat_id}")
     print("SESSION DATA", session)
    
     if "email" in session:
@@ -332,10 +366,6 @@ def user_connected():
         if email:
             online_users[email] = {"name": user_name, "email": email, "avatar": avatar}
             emit('online_users', list(online_users.values()), broadcast=True)
-            
-            if 'chat_id' in session:
-                chat_id = session.get('chat_id')
-                join_room(f"chat_{chat_id}")
    
         
 @socketio.on("disconnect")
@@ -347,51 +377,7 @@ def user_disconnected():
             emit('online_users', list(online_users.values()), broadcast=True)
     
     
-    
-@socketio.on('private-message')
-def private_message(data):
-    chat_id = data.get('chat_id')
-    msg = data.get('message')
-    
-    if not chat_id or not msg:
-        return
-    chat = Chat.query.get(chat_id)
-    if not chat:
-        return
-    
-    new_message = Message(chat_id=chat_id, sender_id=current_user.id, content=msg)
-    db.session.add(new_message)
-    db.session.commit()
-    
-    message_data = {
-        'username': current_user.name,
-        'avatar_url': current_user.avatar_url,
-        'message': msg,
-        'chat_id': chat_id
-    }
-    send(message_data, room=f"chat_{chat_id}")
-    
-@socketio.on('load_chat_history')
-def load_chat_history(data):
-    chat_id = data.get('chat_id')
-    chat = Chat.query.get(chat_id)
-    
-    if not chat or current_user not in chat.users:
-        return
-    messages = Message.query.filter_by(chat_id=chat_id).order_by(Message.timestamp).all()
-    history = [{
-        'username': msg.sender.name,
-        'avatar_url': msg.sender.avatar_url,
-        'message': msg.content,
-        'timestamp': msg.timestamp.strftime('%Y-%m-%d %H:%M:%S')
-    } for msg in messages]
-   
-    emit('chat_history', {'chat_id': chat_id, 'messages': history}, room=f"chat_{chat_id}")
-    
-    
-    
 
-    
     
 if __name__ == '__main__':
     with app.app_context():
