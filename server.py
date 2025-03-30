@@ -21,7 +21,7 @@ socketio = SocketIO(app, cors_allowed_origins="*")
 
 
 
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL", "postgresql://timebecreativechats_user:FSXgz1BxC3gboldt8qhHCIDAyaOJgqrp@dpg-custgannoe9s7393uhf0-a.frankfurt-postgres.render.com/timebecreativechats")
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL", "postgresql://postgres:Vika123Che123Vika@db.trdofkwvgjdpwcovwahe.supabase.co:5432/postgres")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
@@ -99,43 +99,7 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
-#class User(UserMixin):
- #   def __init__(self, user_id, name, email, avatar_url):
- #       self.id = user_id
-  #      self.name = name
-  #      self.email = email
-  #      self.avatar_url = avatar_url
-        
-#@socketio.on('connect')
-#def handle_connect():
-    #print(f"New connection: {request.sid}")
-  #  user_id = session.get('user_id')
-  #  email = session.get('email')
- #   avatar = session.get('avatar')
-  
-  #  print(f"Received user_id: {user_id}, email: {email}, avatar: {avatar}")
-  
-   # if user_id:
-  #      online_users[user_id] = {"email": email, "avatar": avatar, "session_id": request.sid}
-  #      print(f"Online users: {online_users}")
-  #      emit('update_online_users', list(online_users.values()), broadcast=True)
-  #  else:
-  #      print("Missing user_id or email")
 
-#@socketio.on('disconnect')
-#def handle_disconnect():
-  #  user_id = None
-  #  for uid, data in list(online_users.items()):
-   #     if data["session_id"] == request.sid:
-   #         user_id = uid
-   #         del online_users[uid]
-   #         break
-        
-   # if user_id:
-    #    print(f"User {user_id} disconnected")
-    #    emit('update_online_users', list(online_users.values()), broadcast=True)
-   # else:
-   #     print("User not found in online_users")
             
             
         
