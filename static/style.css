@@ -128,6 +128,7 @@
     position: relative;
     margin-right: 20px;
     box-sizing: border-box;
+    z-index: -3;
 }
 .buttons-container {
     flex-direction: column;
