@@ -403,8 +403,8 @@
 
             let deferredPrompt;
 
-            window.addEventListener("beforeinstallpromt", (event) => {
-                event,preventDefault();
+            window.addEventListener("beforeinstallprompt", (event) => {
+                event.preventDefault();
                 deferredPrompt = event;
                 console.log("PWA is ready to be installed");
 
