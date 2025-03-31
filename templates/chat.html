@@ -29,9 +29,32 @@
                 font-weight: bold;
                 margin-left: 10px;
             }
+
+
+            .parallax-container {
+                position: fixed;
+                width: 100vw;
+                overflow: hidden;
+                z-index: -1;
+            }
+            .parallax {
+                position: absolute;
+                width: 100vw;
+                height: 100vh;
+                background-size: cover;
+                background-position: center;
+            }
+            .layer1 { background-image: url('/static/images/layer1.png'); z-index: 1; }
+            .layer2 { background-image: url('/static/images/layer2.png'); z-index: 2; }
+            .layer3 { background-image: url('/static/images/layer3.png'); z-index: 3; }
         </style>
     </head>
     <body>
+        <div class="parallax-container">
+            <div class="parallax layer1"></div>
+            <div class="parallax layer2"></div>
+            <div class="parallax layer3"></div>
+        </div>
 
         <div class="header">
             <img src="/static/images/LogoSmall.png" alt="Logo" class="logoSmall">
@@ -86,6 +109,13 @@
                 const messageContainer = document.getElementById('messages');
                 messageContainer.scrollTop = messageContainer.scrollHeight;
             }
+            window.addEventListener("deviceorintation", (event) => {
+                let x = event.gamma / 10;
+                let y = event.beta / 10;
+                document.querySelector('.layer1').style.transform = `translate3d(${x}px, ${y}px, 0)`;
+                document.querySelector('.layer2').style.transform = `translate3d(${x * 2}px, ${y * 2}px, 0)`;
+                document.querySelector('.layer3').style.transform = `translate3d(${x * 3}px, ${y * 3}px, 0)`;
+            });
         </script>
 
         <footer class="footer">
