@@ -109,9 +109,9 @@
                 const messageContainer = document.getElementById('messages');
                 messageContainer.scrollTop = messageContainer.scrollHeight;
             }
-            window.addEventListener("deviceorintation", (event) => {
-                let x = event.gamma / 10;
-                let y = event.beta / 10;
+            window.addEventListener("deviceorientation", (event) => {
+                let x = event.gamma / 5;
+                let y = event.beta / 5;
                 document.querySelector('.layer1').style.transform = `translate3d(${x}px, ${y}px, 0)`;
                 document.querySelector('.layer2').style.transform = `translate3d(${x * 2}px, ${y * 2}px, 0)`;
                 document.querySelector('.layer3').style.transform = `translate3d(${x * 3}px, ${y * 3}px, 0)`;
