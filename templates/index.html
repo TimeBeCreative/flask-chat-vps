@@ -160,6 +160,8 @@
         <h3>Online Users</h3>
         <ul id="onlineUsersList"></ul>
 
+        <button id="installButton" style="display: none;">Install App</button>
+
         <script>
             var socket = io();
             socket.on('online_users', function(users) {
@@ -390,7 +392,7 @@
 
         </script>
 
-        <button id="installButton" style="display: none;">Install App</button>
+      
 
         <footer class="footer">
             <p>&copy; 2025 TimeBeCreativeChat. All rights reserved.</p>
