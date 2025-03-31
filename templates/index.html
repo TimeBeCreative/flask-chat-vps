@@ -390,6 +390,8 @@
 
         </script>
 
+        <button id="installButton" style="display: none;">Install App</button>
+
         <footer class="footer">
             <p>&copy; 2025 TimeBeCreativeChat. All rights reserved.</p>
         </footer>
@@ -398,7 +400,7 @@
             if ('serviceWorker' in navigator) {
                 navigator.serviceWorker.register("{{ url_for('static', filename='sw.js') }}")
                     .then(() => console.log("Service Worker registered"))
-                    .catch(err => console.error("Service Worker registration failed: ", error));
+                    .catch(err => console.error("Service Worker registration failed: ", err));
             }
 
             let deferredPrompt;
@@ -408,15 +410,18 @@
                 deferredPrompt = event;
                 console.log("PWA is ready to be installed");
 
-                setTimeout(() => {
+                const installButton = document.getElementById("installButton");
+                installButton.style.display = "block"; // Show the install button
+                installButton.addEventListener('click', () => {
                     deferredPrompt.prompt();
                     deferredPrompt.userChoice.then((choiceResult) => {
                         if (choiceResult.outcome === "accepted") {
                             console.log("User installed the app");
                         }
                         deferredPrompt = null;
+                        installButton.style.display = "none"; // Hide the install button after installation
                     });
-                }, 2000); // Show the prompt after 2 seconds
+                }); 
             });
         </script>
     </body>
