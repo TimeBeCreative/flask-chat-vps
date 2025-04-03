@@ -180,15 +180,23 @@ def handle_message(msg):
     if not current_user.is_authenticated:
         return
     
-    print(f'{current_user.name}: {msg}')
+    chat_id = data.get("chat_id")
+    message = data.get("message")
     
-    message_data = {
-        'username': current_user.name,
-        'avatar_url': current_user.avatar_url,
-        'message': msg
-    }
-    send(message_data, broadcast=True)
- 
+    if chat_id:
+        emit('message', {
+            'username': current_user.name,
+            'avatar_url': current_user.avatar_url,
+            'message': message,
+        }, room=chat_id)
+    else:
+        emit('message', {
+            'username': current_user.name,
+            'avatar_url': current_user.avatar_url,
+            'message': message,
+        }, broadcast=True)
+    
+   
     
 
 
@@ -339,14 +347,16 @@ def user_disconnected():
         email = session.get('email')
         if email in online_users:
             del online_users[email]
-            emit('online_users', list(online_users.values()), broadcast=True)
-    
+            socketio.start_background_task(sync_online_users)
+            
+def sync_online_users():
+    socketio.emit('online_users', list(online_users.values()), broadcast=True)
     
     
 @socketio.on('join_room')
 @login_required
 def handle_join_room(data):
-    chat_id = data.get('chat_id')
+    chat_id = data["chat_id"]
     if chat_id:
         join_room(chat_id)
         
@@ -354,23 +364,24 @@ def handle_join_room(data):
 @socketio.on('private_message')
 @login_required
 def handle_private_message(data):
-    chat_id = data.get('chat_id')
-    msg = data.get('message')
+    chat_id = data["chat_id"]
+    message = data["message"]
+    sender_id = session.get("user_id")
     
-    if not chat_id or not msg:
-        return
+    chat = Chat.query.get(chat_id)
+    if not chat or current_user not in chat.users:
+        return 
     
-    message = Message(chat_id=chat_id, sender_id=current_user.id, content=msg)
-    db.session.add(message)
-    db.session.commit()
+    new_message = Message(chat_id=chat_id, sender_id=sender_id, content=message)
+    db.session.add(new_message)
+    db.commit()
     
-    message_data = {
-        'username': current_user.name,
-        'avatar_url': current_user.avatar_url,
-        'message': msg
-    }
-    
-    send(message_data, room=chat_id)
+    emit("message", {
+        "chat_id": chat_id,
+        "username": session.get("user_name"),
+        "message": message,
+        
+    }, room=chat_id)
 
     
 if __name__ == '__main__':
