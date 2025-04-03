@@ -84,8 +84,12 @@
       
 
         <script>
+            var chat_id = "{{ chat_id }}";
+
             var socket = io("flask-chat-vps-production.up.railway.app", { transports: ['websocket', 'polling'] });
 
+            socket.emit('join_room', { chat_id: chat_id });
+            
             socket.on('message', function(msg) {
                 var li = document.createElement("li");
                 li.classList.add("message-container");
@@ -110,7 +114,7 @@
                 var msg = document.getElementById("message").value;
                 if (msg.trim() === "") return;
 
-                socket.emit('message', msg);
+                socket.emit('private_message', { chat_id: chat_id, message: msg });
                 document.getElementById("message").value = "";
             }
             function scrollToBottom() {

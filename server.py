@@ -8,6 +8,7 @@ from flask_socketio import SocketIO, join_room, send
 from flask_socketio import SocketIO, emit
 from collections import defaultdict
 from flask_cors import CORS
+from flask_socketio import join_room, leave_room
 
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 #from flask_oauthlib.client import OAuth
@@ -341,6 +342,35 @@ def user_disconnected():
             emit('online_users', list(online_users.values()), broadcast=True)
     
     
+    
+@socketio.on('join_room')
+@login_required
+def handle_join_room(data):
+    chat_id = data.get('chat_id')
+    if chat_id:
+        join_room(chat_id)
+        
+        
+@socketio.on('private_message')
+@login_required
+def handle_private_message(data):
+    chat_id = data.get('chat_id')
+    msg = data.get('message')
+    
+    if not chat_id or not msg:
+        return
+    
+    message = Message(chat_id=chat_id, sender_id=current_user.id, content=msg)
+    db.session.add(message)
+    db.session.commit()
+    
+    message_data = {
+        'username': current_user.name,
+        'avatar_url': current_user.avatar_url,
+        'message': msg
+    }
+    
+    send(message_data, room=chat_id)
 
     
 if __name__ == '__main__':
