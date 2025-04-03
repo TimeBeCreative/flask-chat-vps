@@ -366,7 +366,7 @@ def handle_join_room(data):
 def handle_private_message(data):
     chat_id = data["chat_id"]
     message = data["message"]
-    sender_id = session.get("user_id")
+    sender_id = current_user.id
     
     chat = Chat.query.get(chat_id)
     if not chat or current_user not in chat.users:
@@ -374,7 +374,7 @@ def handle_private_message(data):
     
     new_message = Message(chat_id=chat_id, sender_id=sender_id, content=message)
     db.session.add(new_message)
-    db.commit()
+    db.session.commit()
     
     emit("message", {
         "chat_id": chat_id,
