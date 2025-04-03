@@ -183,9 +183,20 @@ def handle_message(data):
     chat_id = data.get("chat_id")
     chat_type = data['type']
     message = data.get("message")
+    sender_id = current_user.id
     
     if chat_type == 'public':
-        socketio.emit('message', {'message': message}, room="public_chat", broadcast=True)
+         new_message = Message(chat_id=chat_id, sender_id=sender_id, content=message)
+         db.session.add(new_message)
+         db.session.commit()
+    
+         emit("message", {
+            "chat_id": chat_id,
+            "username": session.get("user_name"),
+            "avatar_url": session.get("avatar"),
+            "message": message,
+        
+        }, room = 'public_chat')
     else:
          emit('message', {
             'username': current_user.name,
