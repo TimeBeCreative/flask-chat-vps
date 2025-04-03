@@ -186,12 +186,18 @@ def handle_message(data):
     sender_id = current_user.id
     
     if chat_type == 'public':
-         new_message = Message(chat_id=chat_id, sender_id=sender_id, content=message)
+         public_chat = Chat.query.filter_by(name='Public Chat').first()
+         if not public_chat:
+             public_chat = Chat(name='Public Chat')
+             db.session.add(public_chat)
+             db.session.commit()
+             
+         new_message = Message(chat_id=public_chat.id, sender_id=sender_id, content=message)
          db.session.add(new_message)
          db.session.commit()
     
          emit("message", {
-            "chat_id": chat_id,
+            "chat_id": public_chat.id,
             "username": session.get("user_name"),
             "avatar_url": session.get("avatar"),
             "message": message,
