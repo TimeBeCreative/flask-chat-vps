@@ -378,7 +378,8 @@
             function sendMessage() {
                 var msg = document.getElementById("message").value;
                 if (msg.trim() === "") return;
-                socket.send(msg);
+                var chatType = 'public';
+                socket.emit('message', { type: chatType, message: msg });
                 document.getElementById("message").value = "";
             }
 

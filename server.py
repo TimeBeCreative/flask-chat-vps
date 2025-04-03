@@ -181,21 +181,19 @@ def handle_message(data):
         return
     
     chat_id = data.get("chat_id")
+    chat_type = data['type']
     message = data.get("message")
     
-    if chat_id:
-        emit('message', {
+    if chat_type == 'public':
+        socketio.emit('message', {'message': message}, room="public_chat", broadcast=True)
+    else:
+         emit('message', {
             'username': current_user.name,
             'avatar_url': current_user.avatar_url,
             'message': message,
         }, room=chat_id)
-    else:
-        emit('message', {
-            'username': current_user.name,
-            'avatar_url': current_user.avatar_url,
-            'message': message,
-        }, room="public_chat", broadcast=True)
     
+ 
    
     
 
