@@ -379,6 +379,7 @@ def handle_private_message(data):
     emit("message", {
         "chat_id": chat_id,
         "username": session.get("user_name"),
+        "avatar_url": session.get("avatar"),
         "message": message,
         
     }, room=chat_id)
