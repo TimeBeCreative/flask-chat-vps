@@ -197,12 +197,7 @@ def handle_message(data):
             "message": message,
         
         }, room = 'public_chat')
-    else:
-         emit('message', {
-            'username': current_user.name,
-            'avatar_url': current_user.avatar_url,
-            'message': message,
-        }, room=chat_id)
+ 
     
  
    

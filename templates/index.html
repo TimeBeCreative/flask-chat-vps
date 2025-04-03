@@ -379,7 +379,7 @@
                 var msg = document.getElementById("message").value;
                 if (msg.trim() === "") return;
                 var chatType = 'public';
-                socket.emit('message', { type: chatType, message: msg });
+                socket.emit('message', { type: chatType, message: msg, chat_id: 'public_chat' });
                 document.getElementById("message").value = "";
             }
 
