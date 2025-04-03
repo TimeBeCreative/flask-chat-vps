@@ -176,7 +176,7 @@ def get_google_oauth_token():
 
 @socketio.on('message')
 #@login_required
-def handle_message(msg):
+def handle_message(data):
     if not current_user.is_authenticated:
         return
     
