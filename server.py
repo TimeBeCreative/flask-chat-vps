@@ -194,7 +194,7 @@ def handle_message(data):
             'username': current_user.name,
             'avatar_url': current_user.avatar_url,
             'message': message,
-        }, broadcast=True)
+        }, room="public_chat", broadcast=True)
     
    
     
@@ -337,6 +337,7 @@ def user_connected():
         print(f"User connected: {user_name}, {email}, {avatar}")
     
         if email:
+            join_room('public_chat')
             online_users[email] = {"name": user_name, "email": email, "avatar": avatar}
             emit('online_users', list(online_users.values()), broadcast=True)
    
