@@ -86,7 +86,7 @@
         <script>
             var chat_id = "{{ chat_id }}";
 
-            var socket = io("flask-chat-vps-production.up.railway.app", { transports: ['websocket', 'polling'] });
+            var socket = io("web-production-b946f.up.railway.app", { transports: ['websocket', 'polling'] });
 
             socket.emit('join_room', { chat_id: chat_id });
 
