@@ -22,7 +22,7 @@ socketio = SocketIO(app, cors_allowed_origins="*")
 
 
 
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL", "postgresql://postgres:Vika123Che123Vika@db.trdofkwvgjdpwcovwahe.supabase.co:5432/postgres?sslmode=require")
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL", "postgresql://postgres.trdofkwvgjdpwcovwahe:Vika123Che123Vika@aws-0-eu-central-1.pooler.supabase.com:6543/postgres?sslmode=require")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
