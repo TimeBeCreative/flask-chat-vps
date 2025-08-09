@@ -18,8 +18,10 @@ from authlib.integrations.flask_client import OAuth
 
 import os
 
-from vapid_keys import VAPID_PRIVATE_KEY, VAPID_PUBLIC_KEY
 
+
+VAPID_PRIVATE_KEY = os.getenv("VAPID_PRIVATE_KEY")
+VAPID_PUBLIC_KEY = os.getenv("VAPID_PUBLIC_KEY")
 
 app = Flask(__name__, static_url_path='/static')
 app.config['SECRET_KEY'] = 'Ukraine TimeBeCreative Magic'
