@@ -369,9 +369,7 @@ def sync_online_users():
 def handle_join_room(data):
     chat_id = data["chat_id"]
     recipient_name = data["recipient_name"]
-    chat = Chat.query.get(chat_id)
-    if not chat or current_user not in chat.users:
-        return
+    
     
     if chat_id:
         join_room(chat_id)
