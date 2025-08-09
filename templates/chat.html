@@ -137,7 +137,7 @@
 
             socket.on('chat_history', function(messages) {
                 var messagesList = document.getElementById("messages");
-                messagesList.innerHTML = ""; // Clear existing messages
+              
 
                 messages.forEach(function(msg) {
                     var li = document.createElement("li");
