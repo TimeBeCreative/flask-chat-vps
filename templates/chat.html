@@ -88,7 +88,7 @@
 
             var socket = io("web-production-b946f.up.railway.app", { transports: ['websocket', 'polling'] });
 
-            socket.emit('join_room', { chat_id: chat_id });
+            socket.emit('join_room', { chat_id: chat_id, recipient_name: "{{ recipient_name }}" });
 
             socket.on('message', function(msg) {
                 var li = document.createElement("li");
