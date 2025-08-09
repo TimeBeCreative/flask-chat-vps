@@ -198,7 +198,7 @@
 
 
             function subscribeUserToPush(registration) {
-                const vapidPublicKey = "{{ vapid_public_key }}";
+                const vapidPublicKey = "BLSnBnCJ66JsQxsz_eFmvix8hHWp9RrJ_gH8DFpnzDw1Dfd5cpoX3H93Pw4uXl_L5FKh2P9vNcJLGWQ6nIcv6LuE";
                 const convertedVapidKey = urlBase64ToUint8Array(vapidPublicKey);
                 registration.pushManager.subscribe({
                     userVisibleOnly: true,
