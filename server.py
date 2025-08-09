@@ -1,14 +1,16 @@
 import eventlet
 eventlet.monkey_patch()
 
+import json
 from flask import request, jsonify
 from flask import Flask, render_template, redirect, url_for, session
 from flask_sqlalchemy import SQLAlchemy
-from flask_socketio import SocketIO, join_room, send
-from flask_socketio import SocketIO, emit
+from flask_socketio import SocketIO, join_room, send, emit
 from collections import defaultdict
 from flask_cors import CORS
 from flask_socketio import join_room, leave_room
+
+
 
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 #from flask_oauthlib.client import OAuth
@@ -16,17 +18,19 @@ from authlib.integrations.flask_client import OAuth
 
 import os
 
+from vapid_keys import VAPID_PRIVATE_KEY, VAPID_PUBLIC_KEY
+
+
 app = Flask(__name__, static_url_path='/static')
 app.config['SECRET_KEY'] = 'Ukraine TimeBeCreative Magic'
 socketio = SocketIO(app, cors_allowed_origins="*")
-
 
 
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL", "postgresql://postgres.trdofkwvgjdpwcovwahe:Vika123Che123Vika@aws-0-eu-central-1.pooler.supabase.com:6543/postgres?sslmode=require")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
-CORS(app, origins=["*"], allow_headers=["Content-Type", "Authorization", "Acces-Control-Allow-Origin"])
+CORS(app, origins=["*"], allow_headers=["Content-Type", "Authorization", "Access-Control-Allow-Origin"])
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -101,7 +105,13 @@ login_manager.init_app(app)
 login_manager.login_view = 'login'
 
 
-            
+user_subscriptions = {}
+@app.route('/save-subscription', methods=['POST'])    
+@login_required
+def save_subscription():
+    subscription = request.json
+    user_subscriptions[current_user.id] = subscription
+    return jsonify({"success": True}), 201       
             
         
         
@@ -391,6 +401,20 @@ def handle_join_room(data):
             emit('chat_history', message_list, room=request.sid)
         
         
+        
+def send_push(subscription_info, data):
+    try:
+        webpush(
+            subscription_info=subscription_info,
+            data=data,
+            vapid_private_key=os.environ.get("VAPID_PRIVATE_KEY"),
+            vapid_claims={
+                "sub": "mailto:your-email@example.com"
+            }
+        )
+    except WebPushException as ex:
+        print(f"Failed to send push notification: {ex}")
+                
 @socketio.on('private_message')
 @login_required
 def handle_private_message(data):
@@ -413,7 +437,16 @@ def handle_private_message(data):
         "message": message,
         
     }, room=chat_id)
-
+    
+    for user in chat.users:
+        if user.id != sender_id and user.id in user_subscriptions:
+            subscription_info = user_subscriptions.get(user.id)
+            send_push(subscription_info, json.dumps({
+                "title": "New message from {session.get('user_name')}",
+                "body": message,
+                "icon": "/static/images/LogoSmall.png",
+                "url": url_for('chat', chat_id=chat_id, _external=True)
+            }))
     
 if __name__ == '__main__':
     with app.app_context():
