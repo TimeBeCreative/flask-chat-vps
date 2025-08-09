@@ -341,9 +341,11 @@ def chat(chat_id):
     if not chat or current_user not in chat.users:
         return redirect(url_for('index'))
     
+    vapid_public_key = "LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0KTUZrd0V3WUhLb1pJemowQ0FRWUlLb1pJemowREFRY0RRZ0FFWHhOeGRGaHBuQXZ2SnFOSys5YTJZV0FYVEF4cgpFVjlOZ2FId0RuRzlVcjU1QThFaFFlVkZ3VzJZK2kxZXlFVlNCYmYxOUtMZHQ2b1JEN29Yd0R3OFVnPT0KLS0tLS1FTkQgUFVCTElDIEtFWS0tLS0tCg"
+    
     other_users = [user for user in chat.users if user.id != current_user.id]
     recipient_name = other_users[0].name if len(other_users) == 1 else "Group chat"
-    return render_template('chat.html', chat_id=chat_id, recipient_name=recipient_name, vapid_public_key=VAPID_PUBLIC_KEY)
+    return render_template('chat.html', chat_id=chat_id, recipient_name=recipient_name, vapid_public_key=vapid_public_key)
 
 online_users = {}
 
