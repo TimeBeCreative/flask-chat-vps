@@ -341,7 +341,7 @@ def chat(chat_id):
     
     other_users = [user for user in chat.users if user.id != current_user.id]
     recipient_name = other_users[0].name if len(other_users) == 1 else "Group chat"
-    return render_template('chat.html', chat_id=chat_id, recipient_name=recipient_name)
+    return render_template('chat.html', chat_id=chat_id, recipient_name=recipient_name, vapid_public_key=VAPID_PUBLIC_KEY)
 
 online_users = {}
 
@@ -407,7 +407,7 @@ def send_push(subscription_info, data):
         webpush(
             subscription_info=subscription_info,
             data=data,
-            vapid_private_key=os.environ.get("VAPID_PRIVATE_KEY"),
+            vapid_private_key=VAPID_PRIVATE_KEY,
             vapid_claims={
                 "sub": "mailto:your-email@example.com"
             }
@@ -442,11 +442,14 @@ def handle_private_message(data):
         if user.id != sender_id and user.id in user_subscriptions:
             subscription_info = user_subscriptions.get(user.id)
             send_push(subscription_info, json.dumps({
-                "title": "New message from {session.get('user_name')}",
+                "title": f"New message from {session.get('user_name')}",
                 "body": message,
                 "icon": "/static/images/LogoSmall.png",
                 "url": url_for('chat', chat_id=chat_id, _external=True)
             }))
+            
+
+    
     
 if __name__ == '__main__':
     with app.app_context():
