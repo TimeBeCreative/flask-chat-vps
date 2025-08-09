@@ -196,18 +196,6 @@
 
 
 
-            if ('serviceWorker' in navigation) {
-                navigation.serviceWorker.register('/static/service-worker.js')
-                    .then(function(registration) {
-                        console.log('Service Worker registered with:', registration);
-                        if ('PushManager' in window) {
-                            subscribeUserToPush(registration);
-                        }
-                    })
-                    .catch(function(error) {
-                        console.error('Service Worker registration failed:', error);
-                    });
-                }
 
             function subscribeUserToPush(registration) {
                 const vapidPublicKey = "{{ vapid_public_key }}";
