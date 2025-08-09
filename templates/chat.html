@@ -131,6 +131,31 @@
                 document.querySelector('.layer2').style.transform = `translate3d(${x * 10}px, ${y * 10}px, 0)`;
                 document.querySelector('.layer3').style.transform = `translate3d(${x * 15}px, ${y * 15}px, 0)`;
             });
+
+
+
+
+            socket.on('chat_history', function(messages) {
+                var messagesList = document.getElementById("messages");
+                messagesList.innerHTML = ""; // Clear existing messages
+
+                messages.forEach(function(msg) {
+                    var li = document.createElement("li");
+                    li.classList.add("message-container");
+
+                    li.innerHTML = `
+                        <img class="avatar" src="${msg.avatar_url}" alt="Avatar">
+                        <div class="message-bubble">
+                            <div class="username">${msg.username}:</div>
+                            <div class="text">${msg.message}</div>
+                        </div>
+                    `;
+
+                    messagesList.appendChild(li);
+                });
+
+                scrollToBottom();
+            });
         </script>
 
         <footer class="footer">

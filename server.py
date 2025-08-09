@@ -368,8 +368,29 @@ def sync_online_users():
 @login_required
 def handle_join_room(data):
     chat_id = data["chat_id"]
+    recipient_name = data["recipient_name"]
+    chat = Chat.query.get(chat_id)
+    if not chat or current_user not in chat.users:
+        return
+    
     if chat_id:
         join_room(chat_id)
+        
+   
+        
+        if recipient_name != "Public Chat":
+            messages = Message.query.filter_by(chat_id=chat_id)\
+                .order_by(Message.timestamp.asc())\
+                .all()
+            message_list = [{
+                "chat_id": message.chat_id,
+                "username": message.sender.name,
+                "avatar_url": message.sender.avatar_url,
+                "message": message.content,
+                "timestamp": message.timestamp.strftime("%Y-%m-%d %H:%M:%S")
+            } for message in messages]
+            
+            emit('chat_history', message_list, room=request.sid)
         
         
 @socketio.on('private_message')
