@@ -15,9 +15,9 @@ self.addEventListener('push', function(event) {
 self.addEventListener('notificationclick', function(event) {
     event.notification.close();
     event.waitUntil(
-        clients.matchAll({ type: 'window' }).then(function(clientList) {
+        clients.matchAll({ type: 'window', includeUncontrolled: true }).then(function(clientList) {
             for (const client of clientList) {
-                if (client.url === '/' && 'focus' in client) {
+                if ('focus' in client) {
                     return client.focus();
                 }
                 if (clients.openWindow) {
