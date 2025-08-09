@@ -90,6 +90,10 @@
 
             socket.emit('join_room', { chat_id: chat_id, recipient_name: "{{ recipient_name }}" });
 
+            if (Notification.permission !== "granted" && Notification.permission !== "denied") {
+                Notification.requestPermission();
+            }
+
             socket.on('message', function(msg) {
                 var li = document.createElement("li");
                 li.classList.add("message-container");
@@ -107,6 +111,24 @@
 
                 document.getElementById("messages").appendChild(li);
                 scrollToBottom();
+
+                if (document.hidden) {
+                    if (Notification.permission === "granted") {
+                        new Notification("New message from " + msg.username, {
+                            body: msg.message,
+                            icon: msg.avatar_url
+                        });
+                    } else if (Notification.permission !== "denied") {
+                        Notification.requestPermission().then(permission => {
+                            if (permission === "granted") {
+                                new Notification("New message from " + msg.username, {
+                                    body: msg.message,
+                                    icon: msg.avatar_url
+                                });
+                            }
+                        });
+                    }
+                }
 
             });
 
