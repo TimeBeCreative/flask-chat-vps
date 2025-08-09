@@ -10,6 +10,7 @@ from collections import defaultdict
 from flask_cors import CORS
 from flask_socketio import join_room, leave_room
 
+from pywebpush import webpush, WebPushException
 
 
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
@@ -20,8 +21,8 @@ import os
 
 
 
-VAPID_PRIVATE_KEY = "LS0tLS1CRUdJTiBFQyBQUklWQVRFIEtFWS0tLS0tCk1IY0NBUUVFSUZTWHFSQTc3Z1AvSGlDMGNENE1MK2s1VkdMTmZVd0VjL1ltb0MvSnFISzJvQW9HQ0NxR1NNNDkKQXdFSG9VUURRZ0FFWHhOeGRGaHBuQXZ2SnFOSys5YTJZV0FYVEF4ckVWOU5nYUh3RG5HOVVyNTVBOEVoUWVWRgp3VzJZK2kxZXlFVlNCYmYxOUtMZHQ2b1JEN29Yd0R3OFVnPT0KLS0tLS1FTkQgRUMgUFJJVkFURSBLRVktLS0tLQo"
-VAPID_PUBLIC_KEY = "LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0KTUZrd0V3WUhLb1pJemowQ0FRWUlLb1pJemowREFRY0RRZ0FFWHhOeGRGaHBuQXZ2SnFOSys5YTJZV0FYVEF4cgpFVjlOZ2FId0RuRzlVcjU1QThFaFFlVkZ3VzJZK2kxZXlFVlNCYmYxOUtMZHQ2b1JEN29Yd0R3OFVnPT0KLS0tLS1FTkQgUFVCTElDIEtFWS0tLS0tCg"
+VAPID_PRIVATE_KEY = "MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgJzA6eVQHXY1Z2LhqXtNqTxTZFhRzCVOfRU7oc6qHtPz2yhRANCAASvFZx4nDW3yEfnz5eZLgKOBdTLEhCkFtf7r9nOdLLnOLONGlkIaZqz7muVbGpKmv+QrKUwLr0wOY2z6v3Lj5"
+VAPID_PUBLIC_KEY = "BP6wV6r7kP-j5Uyt7s8UO6snQ3LB6GXSyQOe4_6bUotDvMmVchWTxP4T2kyhALfFlYvWwW1Xr7FLOix6TaF1F4NI"
 
 app = Flask(__name__, static_url_path='/static')
 app.config['SECRET_KEY'] = 'Ukraine TimeBeCreative Magic'
@@ -116,7 +117,10 @@ def save_subscription():
     return jsonify({"success": True}), 201       
             
         
-        
+    
+    
+vapid_public_key = "BP6wV6r7kP-j5Uyt7s8UO6snQ3LB6GXSyQOe4_6bUotDvMmVchWTxP4T2kyhALfFlYvWwW1Xr7FLOix6TaF1F4NI",
+vapid_private_key = "MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgJzA6eVQHXY1Z2LhqXtNqTxTZFhRzCVOfRU7oc6qHtPz2yhRANCAASvFZx4nDW3yEfnz5eZLgKOBdTLEhCkFtf7r9nOdLLnOLONGlkIaZqz7muVbGpKmv+QrKUwLr0wOY2z6v3Lj5"    
         
 @login_manager.user_loader
 def load_user(user_id):
@@ -341,11 +345,10 @@ def chat(chat_id):
     if not chat or current_user not in chat.users:
         return redirect(url_for('index'))
     
-    vapid_public_key = "LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0KTUZrd0V3WUhLb1pJemowQ0FRWUlLb1pJemowREFRY0RRZ0FFWHhOeGRGaHBuQXZ2SnFOSys5YTJZV0FYVEF4cgpFVjlOZ2FId0RuRzlVcjU1QThFaFFlVkZ3VzJZK2kxZXlFVlNCYmYxOUtMZHQ2b1JEN29Yd0R3OFVnPT0KLS0tLS1FTkQgUFVCTElDIEtFWS0tLS0tCg"
     
     other_users = [user for user in chat.users if user.id != current_user.id]
     recipient_name = other_users[0].name if len(other_users) == 1 else "Group chat"
-    return render_template('chat.html', chat_id=chat_id, recipient_name=recipient_name, vapid_public_key=vapid_public_key)
+    return render_template('chat.html', chat_id=chat_id, recipient_name=recipient_name, vapid_public_key=VAPID_PUBLIC_KEY)
 
 online_users = {}
 
