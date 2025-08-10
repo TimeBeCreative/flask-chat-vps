@@ -198,7 +198,7 @@
 
 
             function subscribeUserToPush(registration) {
-                const vapidPublicKey = "{{ vapid_public_key|tojson }}"; // Replace with your VAPID public key
+                const vapidPublicKey = {{ vapid_public_key|tojson }}; // Replace with your VAPID public key
                 const convertedVapidKey = urlBase64ToUint8Array(vapidPublicKey);
                 registration.pushManager.subscribe({
                     userVisibleOnly: true,
