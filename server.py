@@ -118,10 +118,7 @@ def save_subscription():
             
         
     
-    
-vapid_public_key = "BP6wV6r7kP-j5Uyt7s8UO6snQ3LB6GXSyQOe4_6bUotDvMmVchWTxP4T2kyhALfFlYvWwW1Xr7FLOix6TaF1F4NI",
-vapid_private_key = "MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgJzA6eVQHXY1Z2LhqXtNqTxTZFhRzCVOfRU7oc6qHtPz2yhRANCAASvFZx4nDW3yEfnz5eZLgKOBdTLEhCkFtf7r9nOdLLnOLONGlkIaZqz7muVbGpKmv+QrKUwLr0wOY2z6v3Lj5"    
-        
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
