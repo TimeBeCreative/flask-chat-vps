@@ -409,6 +409,7 @@ def handle_join_room(data):
         
 def send_push(subscription_info, data):
     try:
+        print(f"Sending push notification to: {subscription_info['endpoint']}")
         webpush(
             subscription_info=subscription_info,
             data=data,
@@ -469,7 +470,7 @@ def handle_private_message(data):
 def save_subscription():
     subscription = request.json
     keys = subscription.get("keys", {})
-    existing = PushSubscription.query.filter_by(user_id=current_user.id).first()
+    existing = PushSubscription.query.filter_by(user_id=current_user.id, endpoint=subscription.get("endpoint")).first()
     if existing:
         existing.endpoint = subscription.get("endpoint")
         existing.p256dh = keys.get("p256dh")

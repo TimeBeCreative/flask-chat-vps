@@ -231,10 +231,19 @@
 
             if ('serviceWorker' in navigator) {
                 navigator.serviceWorker.register('/static/service-worker.js')
-                    .then(function(registration) {
-                        subscribeUserToPush(registration);
-                    })
-                    .catch(function(error) {
+                    .then(() => navigator.serviceWorker.ready)
+                    .then(registration => registration.pushManager.getSubscription()
+                        .then(subscription => {
+                            if (!subscription) {
+                                subscribeUserToPush(registration);
+                            } else {
+                                
+                                console.log('User is already subscribed:', subscription);
+                            }
+                        })
+                    
+                    )
+                    .catch(error => {
                         console.error('Service Worker registration failed:', error);
                     });
             } else {
