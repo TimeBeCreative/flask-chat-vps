@@ -79,6 +79,14 @@ class Message(db.Model):
    
     sender = db.relationship('User', backref='messages')
     chat = db.relationship('Chat', backref='messages')
+    
+class PushSubscription(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    endpoint = db.Column(db.Text, nullable=False)
+    p256dh = db.Column(db.String(255), nullable=False)
+    auth = db.Column(db.String(255), nullable=False)
+    
 
 
 #Google OAuth
@@ -108,14 +116,7 @@ login_manager.init_app(app)
 login_manager.login_view = 'login'
 
 
-user_subscriptions = {}
-@app.route('/save-subscription', methods=['POST'])    
-@login_required
-def save_subscription():
-    subscription = request.json
-    user_subscriptions[current_user.id] = subscription
-    return jsonify({"success": True}), 201       
-            
+
         
     
 
@@ -416,6 +417,7 @@ def send_push(subscription_info, data):
                 "sub": "mailto:your-email@example.com"
             }
         )
+        print("Push notification sent successfully")
     except WebPushException as ex:
         print(f"Failed to send push notification: {ex}")
                 
@@ -444,15 +446,44 @@ def handle_private_message(data):
     
     for user in chat.users:
         if user.id != sender_id and user.id in user_subscriptions:
-            subscription_info = user_subscriptions.get(user.id)
-            send_push(subscription_info, json.dumps({
+            subs = PushSubscription.query.filter_by(user_id=user.id).all()
+            for subscription in subs:
+                subscription_info = {
+                    "endpoint": subscription.endpoint,
+                    "keys": {
+                        "p256dh": subscription.p256dh,
+                        "auth": subscription.auth
+                    }
+                }
+            
+                send_push(subscription_info, json.dumps({
                 "title": f"New message from {session.get('user_name')}",
                 "body": message,
                 "icon": "/static/images/LogoSmall.png",
                 "url": url_for('chat', chat_id=chat_id, _external=True)
-            }))
+                }))
             
 
+@app.route('/save-subscription', methods=['POST'])
+@login_required
+def save_subscription():
+    subscription = request.json
+    keys = subscription.get("keys", {})
+    existing = PushSubscription.query.filter_by(user_id=current_user.id).first()
+    if existing:
+        existing.endpoint = subscription.get("endpoint")
+        existing.p256dh = keys.get("p256dh")
+        existing.auth = keys.get("auth")
+    else:
+        new = PushSubscription(
+            user_id=current_user.id,
+            endpoint=subscription.get("endpoint"),
+            p256dh=keys.get("p256dh"),
+            auth=keys.get("auth")
+        )
+        db.session.add(new)
+    db.session.commit()
+    return jsonify({"success": True}), 201
     
     
 if __name__ == '__main__':
