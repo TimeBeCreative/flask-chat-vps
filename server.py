@@ -445,7 +445,7 @@ def handle_private_message(data):
     }, room=chat_id)
     
     for user in chat.users:
-        if user.id != sender_id and user.id in user_subscriptions:
+        if user.id != sender_id:
             subs = PushSubscription.query.filter_by(user_id=user.id).all()
             for subscription in subs:
                 subscription_info = {
